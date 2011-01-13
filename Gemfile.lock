@@ -2,6 +2,9 @@ PATH
   remote: .
   specs:
     bamboo-client (0.0.1)
+      json
+      nokogiri
+      rest-client
 
 GEM
   remote: http://rubygems.org/
@@ -18,6 +21,7 @@ GEM
       json (~> 1.4.6)
     json (1.4.6)
     mime-types (1.16)
+    nokogiri (1.4.3.1)
     rest-client (1.6.1)
       mime-types (>= 1.16)
     rspec (2.4.0)
@@ -36,5 +40,7 @@ PLATFORMS
 DEPENDENCIES
   bamboo-client!
   cucumber
+  json
+  nokogiri
   rest-client
   rspec

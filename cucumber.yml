@@ -1,0 +1,1 @@
+autotest-all: --color --format pretty features

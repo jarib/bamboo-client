@@ -2,9 +2,11 @@ require "uri"
 require "restclient"
 
 require "bamboo-client/version"
+require "bamboo-client/http"
 require "bamboo-client/abstract"
 require "bamboo-client/rest"
 require "bamboo-client/remote"
+
 
 module Bamboo
   module Client

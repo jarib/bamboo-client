@@ -2,10 +2,8 @@ module Bamboo
   module Client
 
     class Abstract
-      attr_reader :uri
-
-      def initialize(url)
-        @uri = URI.parse(url)
+      def initialize(http)
+        @http = http
       end
 
     end # Abstract

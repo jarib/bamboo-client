@@ -4,7 +4,7 @@ module Bamboo
       class Abstract
         attr_reader :uri
 
-        def initialie(url)
+        def initialize(url)
           @uri = URI.parse url
         end
       end # Abstract

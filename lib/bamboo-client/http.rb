@@ -1,4 +1,5 @@
 require 'restclient'
+require "bamboo-client/http/abstract"
 
 module Bamboo
   module Client

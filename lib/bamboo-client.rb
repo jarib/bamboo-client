@@ -12,12 +12,12 @@ module Bamboo
   module Client
     class Error < StandardError; end
 
-    def self.for(url, sym)
+    def self.for(sym, url)
       case sym.to_sym
       when :rest
-        Rest.new url
+        Rest.new Http::Json.new(url)
       when :remote, :legacy
-        Remote.new url
+        Remote.new Http::Xml.new(url)
       else
         raise Error, "unknown client #{sym.inspect}"
       end

@@ -5,7 +5,7 @@ module BambooClientHelper
   attr_reader :client
 
   def use(what)
-    @client = Bamboo::Client.for url, what
+    @client = Bamboo::Client.for what, url
   end
 
   def url

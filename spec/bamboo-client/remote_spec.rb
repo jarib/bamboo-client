@@ -9,7 +9,7 @@ module Bamboo
 
       it "logs in" do
         mock_xml_doc = mock(Http::Xml::Doc)
-        mock_xml_doc.should_receive(:text_for).with("response success").and_return "token"
+        mock_xml_doc.should_receive(:text_for).with("response auth").and_return "token"
 
         http.should_receive(:post).
              with("/api/rest/login.action", :username => "user", :password => "pass").
@@ -17,6 +17,10 @@ module Bamboo
 
         client.login "user", "pass"
         client.token.should == "token"
+      end
+
+      it "raises an error if no token is set" do
+        lambda { client.builds }.should raise_error
       end
 
       it "logs out" do
@@ -54,6 +58,36 @@ module Bamboo
         client.execute_build("fake-build-key").should == "true"
       end
 
+      it "fetches a list of builds" do
+        mock_xml_doc = mock(Http::Xml::Doc)
+        mock_xml_doc.should_receive(:objects_for).
+                     with("build", Remote::Build).
+                     and_return(["some", "objects"])
+
+        client.stub :token => "fake-token"
+
+        http.should_receive(:post).
+             with("/api/rest/listBuildNames.action", :auth => "fake-token").
+             and_return(mock_xml_doc)
+
+        client.builds.should == ["some", "objects"]
+      end
     end # Remote
+
+    describe Remote::Build do
+      let(:build) { Remote::Build.new(xml_fixture("build").css("build").first) }
+
+      it "should know if the build is enabled" do
+        build.should be_enabled
+      end
+
+      it "should know the name of the build" do
+        build.name.should == "Thrift - Default"
+      end
+
+      it "should know the key of the build" do
+        build.key.should == "THRIFT-DEFAULT"
+      end
+    end
   end # Client
 end # Bamboo

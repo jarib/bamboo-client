@@ -7,9 +7,10 @@ Given /^I am logged in$/ do
 end
 
 When /^I fetch all build names$/ do
-  pending # express the regexp above with the code you wish you had
+  @builds = client.builds
 end
 
 Then /^I should get a list of builds$/ do
-  pending # express the regexp above with the code you wish you had
+  @builds.should_not be_empty
+  @builds.each { |e| e.should be_kind_of(Bamboo::Client::Remote::Build)  }
 end

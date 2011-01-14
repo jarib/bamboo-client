@@ -15,7 +15,6 @@ module Bamboo
           doc = xml.post("/", :some => "data")
           doc.should be_kind_of(Xml::Doc)
         end
-
       end
 
       describe Xml::Doc do
@@ -28,6 +27,24 @@ module Bamboo
                   and_return(mock("node", :text => "bar"))
 
           doc.text_for("some selector").should == "bar"
+        end
+
+        it "returns an instance of the given class for each node matching the selector" do
+          wrapped.should_receive(:css).with("selector").and_return(['node1', 'node2'])
+
+          klass = Class.new {
+            attr_reader :obj
+
+            def initialize(obj)
+              @obj = obj
+            end
+          }
+
+          objs = doc.objects_for("selector", klass)
+
+          objs.size.should == 2
+          objs.each { |e| e.should be_instance_of(klass) }
+          objs.map { |e| e.obj }.should == ['node1', 'node2']
         end
       end
     end

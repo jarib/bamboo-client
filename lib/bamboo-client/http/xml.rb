@@ -11,10 +11,15 @@ module Bamboo
 
           def initialize(doc)
             @doc = doc
+            puts doc.to_s if $DEBUG
           end
 
           def text_for(css)
             @doc.css(css).text
+          end
+
+          def objects_for(selector, klass)
+            @doc.css(selector).map { |e| klass.new(e) }
           end
         end # Doc
 

@@ -1,0 +1,4 @@
+<build enabled="true">
+    <name>Thrift - Default</name>
+    <key>THRIFT-DEFAULT</key>
+</build>

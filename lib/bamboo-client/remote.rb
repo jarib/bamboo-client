@@ -20,7 +20,7 @@ module Bamboo
                    :username => user,
                    :password => pass
 
-        @token = doc.text_for("response success")
+        @token = doc.text_for("response auth")
       end
 
       def logout
@@ -42,10 +42,38 @@ module Bamboo
         doc.text_for "response string"
       end
 
+      def builds
+        doc = post :listBuildNames, :auth => token
+
+        doc.objects_for("build", Remote::Build)
+      end
+
       private
 
       def post(action, data = {})
         @http.post "#{@service}/#{action}.action", data
+      end
+
+      #
+      # types
+      #
+
+      class Build
+        def initialize(doc)
+          @doc = doc
+        end
+
+        def enabled?
+          @doc['enabled'] == 'true'
+        end
+
+        def name
+          @doc.css("name").text
+        end
+
+        def key
+          @doc.css("key").text
+        end
       end
 
     end # Remote

@@ -72,6 +72,26 @@ module Bamboo
 
         client.builds.should == ["some", "objects"]
       end
+
+      it "fetches a list of the latest builds for the given user" do
+        mock_xml_doc = mock(Http::Xml::Doc)
+        mock_xml_doc.should_receive(:objects_for).
+                     with("build", Remote::Build).
+                     and_return(["some", "objects"])
+
+        client.stub :token => "fake-token"
+        user = "fake-user"
+
+        http.should_receive(:post).
+             with("/api/rest/getLatestUserBuilds.action", :auth => "fake-token", :user => user).
+             and_return(mock_xml_doc)
+
+        client.latest_builds_for(user).should == ["some", "objects"]
+      end
+
+      it "fetches the latest build results for a given key" do
+        pending
+      end
     end # Remote
 
     describe Remote::Build do

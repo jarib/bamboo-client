@@ -48,6 +48,14 @@ module Bamboo
         doc.objects_for("build", Remote::Build)
       end
 
+      def latest_builds_for(user)
+        doc = post :getLatestUserBuilds,
+                   :auth => token,
+                   :user => user
+
+        doc.objects_for("build", Remote::Build)
+      end
+
       private
 
       def post(action, data = {})

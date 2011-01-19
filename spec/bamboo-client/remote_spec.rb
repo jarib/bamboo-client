@@ -134,6 +134,61 @@ module Bamboo
         it "should know if the build was successful" do
           result.should be_successful
         end
+
+        it "should have a project name" do
+          result.project_name.should == "Advert Selection"
+        end
+
+        it "should have a build name" do
+          result.name.should == "DEFAULT"
+        end
+
+        it "should have a build number" do
+          result.number.should == 28
+        end
+
+        it "should have a failed test count" do
+          result.failed_test_count.should == 0
+        end
+
+        it "should have a successful test count" do
+          result.successful_test_count.should == 13
+        end
+
+        it "should have a start time" do
+          result.start_time.should == Time.parse("2011-01-18 09:55:54")
+        end
+
+        it "should have an end time" do
+          result.end_time.should == Time.parse("2011-01-18T09:56:40+0100")
+        end
+
+        it "should have duration" do
+          result.duration.should == 46
+        end
+
+        it "should have a duration description" do
+          result.duration_description.should == "46 seconds"
+        end
+
+        it "should have a relative date" do
+          result.relative_date.should == "1 day ago"
+        end
+
+        it "should have a test summary" do
+          result.test_summary.should == "13 passed"
+        end
+
+        it "should have a reason" do
+          result.reason.should == "Code has changed"
+        end
+
+        it "should have commits" do
+          commits = result.commits
+          commits.size.should == 2
+          commits.each { |c| c.should be_kind_of Remote::BuildResult::Commit }
+          commits.map { |c| c.author }.should == %w[foo bar]
+        end
       end
 
     end # describe Remote

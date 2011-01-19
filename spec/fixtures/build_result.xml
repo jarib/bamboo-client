@@ -15,7 +15,7 @@
   <buildTestSummary>13 passed</buildTestSummary>
   <buildReason>Code has changed</buildReason>
   <commits>
-    <commit author="anonymous"/>
-    <commit author="anonymous"/>
+    <commit author="foo"/>
+    <commit author="bar"/>
   </commits>
 </response>

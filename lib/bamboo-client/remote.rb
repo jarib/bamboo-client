@@ -108,6 +108,73 @@ module Bamboo
         def successful?
           state == :successful
         end
+
+        def project_name
+          @doc.css("projectName").text
+        end
+
+        def name
+          @doc.css("buildName").text
+        end
+
+        def number
+          @doc.css("buildNumber").text.to_i
+        end
+
+        def failed_test_count
+          @doc.css("failedTestCount").text.to_i
+        end
+
+        def successful_test_count
+          @doc.css("successfulTestCount").text.to_i
+        end
+
+        def start_time
+          Time.parse @doc.css("buildTime").text
+        rescue ArgumentError
+          nil
+        end
+
+        def end_time
+          Time.parse @doc.css("buildCompletedDate").text
+        rescue ArgumentError
+          nil
+        end
+
+        def duration
+          @doc.css("buildDurationInSeconds").text.to_i
+        end
+
+        def duration_description
+          @doc.css("buildDurationDescription").text
+        end
+
+        def relative_date
+          @doc.css("buildRelativeBuildDate").text
+        end
+
+        def test_summary
+          @doc.css("buildTestSummary").text
+        end
+
+        def reason
+          @doc.css("buildReason").text
+        end
+
+        def commits
+          @doc.css('commits commit').map { |e| Commit.new(e) }
+        end
+
+        class Commit
+          def initialize(doc)
+            @doc = doc
+          end
+
+          def author
+            @doc['author']
+          end
+        end
+
       end
     end # Remote
   end # Client

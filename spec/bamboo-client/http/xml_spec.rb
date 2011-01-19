@@ -19,8 +19,8 @@ module Bamboo
       end
 
       describe Xml::Doc do
-        let(:wrapped) { 
-          m = mock("nokogiri document") 
+        let(:wrapped) {
+          m = mock("nokogiri document")
           m.stub!(:css).with("errors error").and_return []
           m
         }
@@ -32,6 +32,11 @@ module Bamboo
                   and_return(mock("node", :text => "bar"))
 
           doc.text_for("some selector").should == "bar"
+        end
+
+        it "checks for errors in the given document" do
+          wrapped.should_receive(:css).with("errors error").and_return [mock(:text => "error!")]
+          lambda { doc.text_for "some selector" }.should raise_error(Bamboo::Client::Error)
         end
 
         it "returns an instance of the given class for each node matching the selector" do

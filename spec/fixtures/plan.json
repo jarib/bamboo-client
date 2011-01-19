@@ -1,0 +1,12 @@
+{
+    "enabled":true,
+    "type":"chain",
+    "name":"Selenium 2 Ruby - WebDriver Remote Client Tests - Windows",
+    "key":"S2RB-REMWIN",
+    "link":
+    {
+        "rel":"self",
+        "href":"http://xserve.openqa.org:8085/rest/api/latest/plan/S2RB-REMWIN"
+    }
+}
+

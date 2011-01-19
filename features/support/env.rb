@@ -1,6 +1,8 @@
 $:.unshift File.expand_path("../../../lib", __FILE__)
 require "bamboo-client"
 
+$DEBUG = false
+
 module BambooClientHelper
   attr_reader :client
 

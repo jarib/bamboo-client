@@ -16,6 +16,12 @@ module Bamboo::Client::SpecHelper
     Nokogiri.XML File.read(path)
   end
 
+  def json_fixture(name)
+    path = File.join fixture_path("#{name}.json")
+
+    JSON.parse File.read(path)
+  end
+
   def fixture_path(file)
     dir = File.expand_path("../fixtures", __FILE__)
 

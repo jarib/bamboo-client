@@ -9,12 +9,9 @@ Feature: Bamboo REST client
   Scenario: Fetch plans
     When I fetch all the plans
     Then I should get a list of plans
-    # And I should be able to get the latest result
-  #
-  # Scenario: Fetch a build result
-  #   When I fetch a build result
-  #   Then the build result should have a key
-  #   And the build result should have a state
-  #
-  # Scenario: Log out
-  #   Then I should be able to log out
+    And all plans should have a key
+
+  Scenario: Fetch projects
+    When I fetch all projects
+    Then I should get a list of projects
+    And all projects should have a key

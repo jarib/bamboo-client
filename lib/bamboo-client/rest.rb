@@ -14,8 +14,11 @@ module Bamboo
       end
 
       def plans
-        doc = get "plan"
-        doc.expand "plans", Plan
+        get("plan").auto_expand Plan
+      end
+
+      def projects
+        get("project").auto_expand Project
       end
 
       private
@@ -28,7 +31,45 @@ module Bamboo
         def initialize(data)
           @data = data
         end
-      end
+
+        def enabled?
+          @data['enabled']
+        end
+
+        def type
+          @data['type'].downcase.to_sym
+        end
+
+        def name
+          @data['name']
+        end
+
+        def key
+          @data['key']
+        end
+
+        def url
+          @data.fetch("link")['href']
+        end
+      end # Plan
+
+      class Project
+        def initialize(data)
+          @data = data
+        end
+
+        def name
+          @data['name']
+        end
+
+        def key
+          @data['key']
+        end
+
+        def url
+          @data.fetch("link")['href']
+        end
+      end # Project
 
     end # Rest
   end # Client

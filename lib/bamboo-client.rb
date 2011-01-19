@@ -7,6 +7,7 @@ require "bamboo-client/abstract"
 require "bamboo-client/rest"
 require "bamboo-client/remote"
 
+require "pp" if $DEBUG
 
 module Bamboo
   module Client

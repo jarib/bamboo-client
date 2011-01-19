@@ -26,15 +26,47 @@ module Bamboo
       end
 
       describe Json::Doc do
-        it "expands the elements for the given key into instance of the given class" do
-          doc = Json::Doc.new({
-            'strings' => ["foo", "bar"]
-          })
+        it "auto expands a one-level expansion" do
+          doc = Json::Doc.new(
+            "expand" => "a",
+            "a" => {"some" => "data"}
+          )
 
-          objs = doc.expand 'strings', SpecHelper::Wrapper
-          objs.should_not be_empty
-          objs.each { |o| o.should be_kind_of(SpecHelper::Wrapper) }
-          objs.map { |o| o.obj }.should == %w[foo bar]
+          doc.auto_expand(SpecHelper::Wrapper).obj.should == {"some" => "data"}
+        end
+
+        it "auto expands Arrays" do
+          expected = [{"some" => "data"}, {"something" => "else"}]
+
+          doc = Json::Doc.new(
+            "expand" => "a",
+            "a" => expected
+          )
+
+          actual = doc.auto_expand(SpecHelper::Wrapper).map { |e| e.obj }
+          actual.should == expected
+        end
+
+        it "auto-expands the next expansion level" do
+          doc = Json::Doc.new(
+            "expand" => "a",
+            "a" => {
+              "expand" => "b",
+              "b" => %w[foo bar]
+            }
+          )
+
+          actual = doc.auto_expand(SpecHelper::Wrapper).map { |e| e.obj }
+          actual.should == %w[foo bar]
+        end
+
+        it "raises a TypeError if an object can't be expanded" do
+          doc = Json::Doc.new(
+            "expand" => "a",
+            "a" => 1
+          )
+
+          lambda { doc.auto_expand(SpecHelper::Wrapper) }.should raise_error(TypeError)
         end
       end
 

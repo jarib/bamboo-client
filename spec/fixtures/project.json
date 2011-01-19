@@ -1,0 +1,8 @@
+{
+  "name": "Selenium 2 Java",
+  "key": "S2J",
+  "link": {
+    "rel": "self",
+    "href": "http://xserve.openqa.org:8085/rest/api/latest/project/S2J"
+  }
+}

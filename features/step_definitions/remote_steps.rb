@@ -15,7 +15,6 @@ Then /^I should get a list of builds$/ do
   @builds.each { |e| e.should be_kind_of(Bamboo::Client::Remote::Build)  }
 end
 
-
 When /^I fetch a build result$/ do
   builds = client.builds
   build_key = builds.first.key
@@ -31,3 +30,6 @@ Then /^the build result should have a state$/ do
   @build_result.state.should be_kind_of(Symbol)
 end
 
+Then /^I should be able to get the latest result$/ do
+  @builds.first.latest_results.should be_kind_of(Bamboo::Client::Remote::BuildResult)
+end

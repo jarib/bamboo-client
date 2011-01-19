@@ -25,7 +25,7 @@ module Bamboo::Client::SpecHelper
   class Wrapper
     attr_reader :obj
 
-    def initialize(obj)
+    def initialize(obj, *extra_args)
       @obj = obj
     end
   end

@@ -10,6 +10,7 @@ Feature: Bamboo Remote client
   Scenario: Fetch build names
     When I fetch all build names
     Then I should get a list of builds
+    And I should be able to get the latest result
 
   Scenario: Fetch a build result
     When I fetch a build result

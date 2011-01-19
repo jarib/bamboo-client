@@ -64,7 +64,7 @@ module Bamboo
         end
 
         it "fetches a list of builds" do
-          document.should_receive(:objects_for).with("build", Remote::Build).
+          document.should_receive(:objects_for).with("build", Remote::Build, client).
                                                 and_return(["some", "objects"])
 
           http.should_receive(:post).with(
@@ -76,7 +76,7 @@ module Bamboo
         end
 
         it "fetches a list of the latest builds for the given user" do
-          document.should_receive(:objects_for).with("build", Remote::Build).
+          document.should_receive(:objects_for).with("build", Remote::Build, client).
                                                 and_return(["some", "objects"])
 
           user = "fake-user"
@@ -131,7 +131,9 @@ module Bamboo
       end # API calls
 
       describe Remote::Build do
-        let(:build) { Remote::Build.new(xml_fixture("build").css("build").first) }
+        let(:client) { mock(Remote) }
+        let(:doc)    { xml_fixture("build").css("build").first }
+        let(:build) { Remote::Build.new(doc, client) }
 
         it "should know if the build is enabled" do
           build.should be_enabled
@@ -143,6 +145,26 @@ module Bamboo
 
         it "should know the key of the build" do
           build.key.should == "THRIFT-DEFAULT"
+        end
+
+        it "should be able to fetch the latest results" do
+          client.should_receive(:latest_build_results).with build.key
+          build.latest_results
+        end
+
+        it "should be able to execute the build" do
+          client.should_receive(:execute_build).with build.key
+          build.execute
+        end
+
+        it "should be able to update and build" do
+          client.should_receive(:update_and_build).with build.key
+          build.update_and_build
+        end
+
+        it "should be able to fetch recentyl completed results" do
+          client.should_receive(:recently_completed_results_for_build).with build.key
+          build.recently_completed_results
         end
       end # Remote::Build
 

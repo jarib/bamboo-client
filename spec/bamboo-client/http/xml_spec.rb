@@ -42,9 +42,27 @@ module Bamboo
 
         it "returns an instance of the given class for the first node matching the selector" do
           wrapped.should_receive(:css).with("selector").and_return(['node1', 'node2'])
+
           obj = doc.object_for("selector", SpecHelper::Wrapper)
+
           obj.should be_instance_of(SpecHelper::Wrapper)
           obj.obj.should == "node1"
+        end
+
+        it "#object_for passes extra args to the given class' constructor" do
+          wrapped.should_receive(:css).with("selector").and_return(['node1', 'node2'])
+
+          SpecHelper::Wrapper.should_receive(:new).with('node1', "foo")
+          doc.object_for("selector", SpecHelper::Wrapper, "foo")
+        end
+
+        it "#objects_for passes extra args to the given class' constructor" do
+          wrapped.should_receive(:css).with("selector").and_return(['node1', 'node2'])
+
+          SpecHelper::Wrapper.should_receive(:new).with('node1', "foo")
+          SpecHelper::Wrapper.should_receive(:new).with('node2', "foo")
+
+          doc.objects_for("selector", SpecHelper::Wrapper, "foo")
         end
       end
     end

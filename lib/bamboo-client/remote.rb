@@ -20,7 +20,7 @@ module Bamboo
                    :username => user,
                    :password => pass
 
-        @token = doc.text_for("response auth")
+        @token = doc.text_for "response auth"
       end
 
       def logout
@@ -45,7 +45,7 @@ module Bamboo
       def builds
         doc = post :listBuildNames, :auth => token
 
-        doc.objects_for "build", Remote::Build
+        doc.objects_for "build", Remote::Build, self
       end
 
       def latest_builds_for(user)
@@ -53,7 +53,7 @@ module Bamboo
                    :auth => token,
                    :user => user
 
-        doc.objects_for "build", Remote::Build
+        doc.objects_for "build", Remote::Build, self
       end
 
       def latest_build_results(build_key)
@@ -91,8 +91,9 @@ module Bamboo
       #
 
       class Build
-        def initialize(doc)
+        def initialize(doc, client)
           @doc = doc
+          @client = client
         end
 
         def enabled?
@@ -105,6 +106,22 @@ module Bamboo
 
         def key
           @doc.css("key").text
+        end
+
+        def latest_results
+          @client.latest_build_results key
+        end
+
+        def execute
+          @client.execute_build(key)
+        end
+
+        def update_and_build
+          @client.update_and_build(key)
+        end
+
+        def recently_completed_results
+          @client.recently_completed_results_for_build(key)
         end
       end
 

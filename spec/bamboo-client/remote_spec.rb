@@ -147,7 +147,8 @@ module Bamboo
       end # Remote::Build
 
       describe Remote::BuildResult do
-        let(:result) { Remote::BuildResult.new(xml_fixture("build_result").css("response").first) }
+        let(:doc)    { xml_fixture("build_result").css("response").first }
+        let(:result) { Remote::BuildResult.new(doc) }
 
         it "should have a key" do
           result.key.should == "ADS-DEFAULT"
@@ -183,6 +184,16 @@ module Bamboo
 
         it "should have a start time" do
           result.start_time.should == Time.parse("2011-01-18 09:55:54")
+        end
+
+        it "returns nil if start time can not be parsed" do
+          doc.stub(:css).and_return mock(:text => "foo")
+          result.start_time.should be_nil
+        end
+
+        it "returns nil if start time can not be parsed" do
+          doc.stub(:css).and_return mock(:text => "foo")
+          result.end_time.should be_nil
         end
 
         it "should have an end time" do

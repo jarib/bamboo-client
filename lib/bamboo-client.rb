@@ -19,7 +19,7 @@ module Bamboo
       when :remote, :legacy
         Remote.new Http::Xml.new(url)
       else
-        raise Error, "unknown client #{sym.inspect}"
+        raise ArgumentError, "unknown client #{sym.inspect}"
       end
     end
 

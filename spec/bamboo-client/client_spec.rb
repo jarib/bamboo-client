@@ -13,6 +13,10 @@ module Bamboo
 
       client.should be_kind_of(Client::Remote)
     end
+
+    it "raises ArgumentError if the client is unknown" do
+      lambda { Client.for :foo, "http://foo.com" }.should raise_error(ArgumentError)
+    end
   end
 
 end

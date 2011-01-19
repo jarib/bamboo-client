@@ -64,6 +64,22 @@ module Bamboo
         doc.object_for "response", Remote::BuildResult
       end
 
+      def recently_completed_results_for_project(project_key)
+        doc = post :getRecentlyCompletedBuildResultsForProject,
+                   :auth       => token,
+                   :projectKey => project_key
+
+        doc.objects_for "build", Remote::BuildResult
+      end
+
+      def recently_completed_results_for_build(build_key)
+        doc = post :getRecentlyCompletedBuildResultsForBuild,
+                   :auth       => token,
+                   :buildKey => build_key
+
+        doc.objects_for "build", Remote::BuildResult
+      end
+
       private
 
       def post(action, data = {})

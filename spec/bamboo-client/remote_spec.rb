@@ -102,6 +102,32 @@ module Bamboo
 
           client.latest_build_results("fake-key").should == ["some objects"]
         end
+
+        it "fetches the recently completed build results for a given project" do
+          document.should_receive(:objects_for).with("build", Remote::BuildResult).
+                                                and_return(%w[some results])
+
+          http.should_receive(:post).with(
+            "/api/rest/getRecentlyCompletedBuildResultsForProject.action",
+            :auth       => "fake-token",
+            :projectKey => "fake-project"
+          ).and_return(document)
+
+          client.recently_completed_results_for_project("fake-project").should == %w[some results]
+        end
+
+        it "fetches the recently completed build results for a given build key" do
+          document.should_receive(:objects_for).with("build", Remote::BuildResult).
+                                                and_return(%w[some results])
+
+          http.should_receive(:post).with(
+            "/api/rest/getRecentlyCompletedBuildResultsForBuild.action",
+            :auth       => "fake-token",
+            :buildKey   => "fake-key"
+          ).and_return(document)
+
+          client.recently_completed_results_for_build("fake-key").should == %w[some results]
+        end
       end # API calls
 
       describe Remote::Build do

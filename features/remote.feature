@@ -5,8 +5,13 @@ Feature: Bamboo Remote client
 
   Background:
     Given I am using the Remote client
+    And I am logged in
 
   Scenario: Fetch build names
-    Given I am logged in
     When I fetch all build names
     Then I should get a list of builds
+
+  Scenario: Fetch a build result
+    When I fetch a build result
+    Then the build result should have a key
+    And the build result should have a state

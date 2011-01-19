@@ -7,6 +7,7 @@ module Bamboo
         let(:url) { "http://example.com" }
         let(:xml) { Xml.new(url) }
 
+
         it "does a POST" do
           RestClient.should_receive(:post).
                      with("#{url}/", :some => "data").
@@ -32,19 +33,18 @@ module Bamboo
         it "returns an instance of the given class for each node matching the selector" do
           wrapped.should_receive(:css).with("selector").and_return(['node1', 'node2'])
 
-          klass = Class.new {
-            attr_reader :obj
-
-            def initialize(obj)
-              @obj = obj
-            end
-          }
-
-          objs = doc.objects_for("selector", klass)
+          objs = doc.objects_for("selector", SpecHelper::Wrapper)
 
           objs.size.should == 2
-          objs.each { |e| e.should be_instance_of(klass) }
+          objs.each { |e| e.should be_instance_of(SpecHelper::Wrapper) }
           objs.map { |e| e.obj }.should == ['node1', 'node2']
+        end
+
+        it "returns an instance of the given class for the first node matching the selector" do
+          wrapped.should_receive(:css).with("selector").and_return(['node1', 'node2'])
+          obj = doc.object_for("selector", SpecHelper::Wrapper)
+          obj.should be_instance_of(SpecHelper::Wrapper)
+          obj.obj.should == "node1"
         end
       end
     end

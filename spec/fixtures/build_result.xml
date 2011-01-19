@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<response>
+  <projectName>Advert Selection</projectName>
+  <buildName>DEFAULT</buildName>
+  <buildKey>ADS-DEFAULT</buildKey>
+  <buildState>Successful</buildState>
+  <buildNumber>28</buildNumber>
+  <failedTestCount>0</failedTestCount>
+  <successfulTestCount>13</successfulTestCount>
+  <buildTime>2011-01-18 09:55:54</buildTime>
+  <buildCompletedDate>2011-01-18T09:56:40+0100</buildCompletedDate>
+  <buildDurationInSeconds>46</buildDurationInSeconds>
+  <buildDurationDescription>46 seconds</buildDurationDescription>
+  <buildRelativeBuildDate>1 day ago</buildRelativeBuildDate>
+  <buildTestSummary>13 passed</buildTestSummary>
+  <buildReason>Code has changed</buildReason>
+  <commits>
+    <commit author="anonymous"/>
+    <commit author="anonymous"/>
+  </commits>
+</response>

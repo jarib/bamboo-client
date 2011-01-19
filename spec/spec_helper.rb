@@ -13,6 +13,14 @@ module Bamboo::Client::SpecHelper
 
     File.join dir, file
   end
+
+  class Wrapper
+    attr_reader :obj
+
+    def initialize(obj)
+      @obj = obj
+    end
+  end
 end
 
 RSpec.configure do |c|

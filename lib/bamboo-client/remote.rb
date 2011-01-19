@@ -31,7 +31,7 @@ module Bamboo
       def update_and_build(build_name)
         doc = post :updateAndBuild, :buildName => build_name
 
-        doc.text_for("response success")
+        doc.text_for "response success"
       end
 
       def execute_build(build_key)
@@ -45,7 +45,7 @@ module Bamboo
       def builds
         doc = post :listBuildNames, :auth => token
 
-        doc.objects_for("build", Remote::Build)
+        doc.objects_for "build", Remote::Build
       end
 
       def latest_builds_for(user)
@@ -53,7 +53,15 @@ module Bamboo
                    :auth => token,
                    :user => user
 
-        doc.objects_for("build", Remote::Build)
+        doc.objects_for "build", Remote::Build
+      end
+
+      def latest_build_results(build_key)
+        doc = post :getLatestBuildResults,
+                   :auth     => token,
+                   :buildKey => build_key
+
+        doc.object_for "response", Remote::BuildResult
       end
 
       private
@@ -84,6 +92,23 @@ module Bamboo
         end
       end
 
+      class BuildResult
+        def initialize(doc)
+          @doc = doc
+        end
+
+        def key
+          @doc.css("buildKey").text
+        end
+
+        def state
+          @doc.css("buildState").text.downcase.gsub(/ /, '_').to_sym
+        end
+
+        def successful?
+          state == :successful
+        end
+      end
     end # Remote
   end # Client
 end # Bamboo

@@ -21,6 +21,13 @@ module Bamboo
           def objects_for(selector, klass)
             @doc.css(selector).map { |e| klass.new(e) }
           end
+
+          def object_for(selector, klass)
+            node = @doc.css(selector).first
+            node or raise Error, "no node matches selector #{selector.inspect}"
+
+            klass.new node
+          end
         end # Doc
 
         def post(path, data = {})

@@ -13,8 +13,8 @@ module Bamboo
           document.should_receive(:text_for).with("response auth").and_return "token"
 
           http.should_receive(:post).with(
-            "/api/rest/login.action", 
-            :username => "user", 
+            "/api/rest/login.action",
+            :username => "user",
             :password => "pass"
           ).and_return(document)
 
@@ -28,7 +28,7 @@ module Bamboo
 
         it "logs out" do
           http.should_receive(:post).with(
-            "/api/rest/logout.action", 
+            "/api/rest/logout.action",
             :token => "foo"
           )
 
@@ -37,10 +37,10 @@ module Bamboo
           client.token.should be_nil
         end
       end
-      
+
       context "API calls" do
         before { client.stub(:token => "fake-token") }
-        
+
         it "updates and builds" do
           document.should_receive(:text_for).with("response success").and_return "true"
 
@@ -55,11 +55,11 @@ module Bamboo
           document.should_receive(:text_for).with("response string").and_return "true"
 
           http.should_receive(:post).with(
-            "/api/rest/executeBuild.action", 
+            "/api/rest/executeBuild.action",
             :auth     => "fake-token",
             :buildKey => "fake-build-key"
           ).and_return(document)
-        
+
           client.execute_build("fake-build-key").should == "true"
         end
 
@@ -68,7 +68,7 @@ module Bamboo
                                                 and_return(["some", "objects"])
 
           http.should_receive(:post).with(
-            "/api/rest/listBuildNames.action", 
+            "/api/rest/listBuildNames.action",
             :auth => "fake-token"
           ).and_return(document)
 
@@ -82,8 +82,8 @@ module Bamboo
           user = "fake-user"
 
           http.should_receive(:post).with(
-            "/api/rest/getLatestUserBuilds.action", 
-            :auth => "fake-token", 
+            "/api/rest/getLatestUserBuilds.action",
+            :auth => "fake-token",
             :user => user
           ).and_return(document)
 
@@ -91,10 +91,19 @@ module Bamboo
         end
 
         it "fetches the latest build results for a given key" do
-          pending
+          document.should_receive(:object_for).with("response", Remote::BuildResult).
+                                               and_return(["some objects"])
+
+          http.should_receive(:post).with(
+            "/api/rest/getLatestBuildResults.action",
+            :auth     => "fake-token",
+            :buildKey => "fake-key"
+          ).and_return(document)
+
+          client.latest_build_results("fake-key").should == ["some objects"]
         end
       end # API calls
-      
+
       describe Remote::Build do
         let(:build) { Remote::Build.new(xml_fixture("build").css("build").first) }
 
@@ -110,6 +119,23 @@ module Bamboo
           build.key.should == "THRIFT-DEFAULT"
         end
       end # Remote::Build
+
+      describe Remote::BuildResult do
+        let(:result) { Remote::BuildResult.new(xml_fixture("build_result").css("response").first) }
+
+        it "should have a key" do
+          result.key.should == "ADS-DEFAULT"
+        end
+
+        it "should have a state" do
+          result.state.should == :successful
+        end
+
+        it "should know if the build was successful" do
+          result.should be_successful
+        end
+      end
+
     end # describe Remote
   end # Client
 end # Bamboo

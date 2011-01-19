@@ -1,2 +1,4 @@
 autotest-all: --color --format pretty features
+autotest-rest: --color --format pretty features/rest.feature
+autotest-remote: --color --format pretty features/remote.feature
 default: --color --format progress features

@@ -44,14 +44,6 @@ module Bamboo
           Doc.from RestClient.post(uri_for(path), data)
         end
 
-        private
-
-        def uri_for(path)
-          u      = uri.dup
-          u.path = path
-
-          u.to_s
-        end
       end # Xml
     end # Http
   end # Client

@@ -6,108 +6,110 @@ module Bamboo
       let(:url)  { "http://bamboo.example.com" }
       let(:http) { mock(Http::Xml) }
       let(:client) { Remote.new(http) }
+      let(:document) { mock(Http::Xml::Doc) }
 
-      it "logs in" do
-        mock_xml_doc = mock(Http::Xml::Doc)
-        mock_xml_doc.should_receive(:text_for).with("response auth").and_return "token"
+      context "authorization" do
+        it "logs in" do
+          document.should_receive(:text_for).with("response auth").and_return "token"
 
-        http.should_receive(:post).
-             with("/api/rest/login.action", :username => "user", :password => "pass").
-             and_return mock_xml_doc
+          http.should_receive(:post).with(
+            "/api/rest/login.action", 
+            :username => "user", 
+            :password => "pass"
+          ).and_return(document)
 
-        client.login "user", "pass"
-        client.token.should == "token"
+          client.login "user", "pass"
+          client.token.should == "token"
+        end
+
+        it "raises an error if no token is set" do
+          lambda { client.builds }.should raise_error
+        end
+
+        it "logs out" do
+          http.should_receive(:post).with(
+            "/api/rest/logout.action", 
+            :token => "foo"
+          )
+
+          client.instance_variable_set "@token", "foo"
+          client.logout
+          client.token.should be_nil
+        end
       end
+      
+      context "API calls" do
+        before { client.stub(:token => "fake-token") }
+        
+        it "updates and builds" do
+          document.should_receive(:text_for).with("response success").and_return "true"
 
-      it "raises an error if no token is set" do
-        lambda { client.builds }.should raise_error
-      end
+          http.should_receive(:post).
+               with("/api/rest/updateAndBuild.action", :buildName => "fake-name").
+               and_return(document)
 
-      it "logs out" do
-        http.should_receive(:post).
-             with("/api/rest/logout.action", :token => "foo")
+          client.update_and_build("fake-name").should == "true"
+        end
 
-        client.instance_variable_set "@token", "foo"
-        client.logout
-        client.token.should be_nil
-      end
+        it "executes a build" do
+          document.should_receive(:text_for).with("response string").and_return "true"
 
-      it "updates and builds" do
-        mock_xml_doc = mock(Http::Xml::Doc)
-        mock_xml_doc.should_receive(:text_for).
-                     with("response success").
-                     and_return "true"
+          http.should_receive(:post).with(
+            "/api/rest/executeBuild.action", 
+            :auth     => "fake-token",
+            :buildKey => "fake-build-key"
+          ).and_return(document)
+        
+          client.execute_build("fake-build-key").should == "true"
+        end
 
-        http.should_receive(:post).
-             with("/api/rest/updateAndBuild.action", :buildName => "fake-name").
-             and_return(mock_xml_doc)
+        it "fetches a list of builds" do
+          document.should_receive(:objects_for).with("build", Remote::Build).
+                                                and_return(["some", "objects"])
 
-        client.update_and_build("fake-name").should == "true"
-      end
+          http.should_receive(:post).with(
+            "/api/rest/listBuildNames.action", 
+            :auth => "fake-token"
+          ).and_return(document)
 
-      it "executes a build" do
-        mock_xml_doc = mock(Http::Xml::Doc)
-        mock_xml_doc.should_receive(:text_for).with("response string").and_return "true"
+          client.builds.should == ["some", "objects"]
+        end
 
-        http.should_receive(:post).
-             with("/api/rest/executeBuild.action", :auth => "fake-token",
-                                                   :buildKey => "fake-build-key").
-             and_return(mock_xml_doc)
+        it "fetches a list of the latest builds for the given user" do
+          document.should_receive(:objects_for).with("build", Remote::Build).
+                                                and_return(["some", "objects"])
 
-        client.stub :token => "fake-token"
-        client.execute_build("fake-build-key").should == "true"
-      end
+          user = "fake-user"
 
-      it "fetches a list of builds" do
-        mock_xml_doc = mock(Http::Xml::Doc)
-        mock_xml_doc.should_receive(:objects_for).
-                     with("build", Remote::Build).
-                     and_return(["some", "objects"])
+          http.should_receive(:post).with(
+            "/api/rest/getLatestUserBuilds.action", 
+            :auth => "fake-token", 
+            :user => user
+          ).and_return(document)
 
-        client.stub :token => "fake-token"
+          client.latest_builds_for(user).should == ["some", "objects"]
+        end
 
-        http.should_receive(:post).
-             with("/api/rest/listBuildNames.action", :auth => "fake-token").
-             and_return(mock_xml_doc)
+        it "fetches the latest build results for a given key" do
+          pending
+        end
+      end # API calls
+      
+      describe Remote::Build do
+        let(:build) { Remote::Build.new(xml_fixture("build").css("build").first) }
 
-        client.builds.should == ["some", "objects"]
-      end
+        it "should know if the build is enabled" do
+          build.should be_enabled
+        end
 
-      it "fetches a list of the latest builds for the given user" do
-        mock_xml_doc = mock(Http::Xml::Doc)
-        mock_xml_doc.should_receive(:objects_for).
-                     with("build", Remote::Build).
-                     and_return(["some", "objects"])
+        it "should know the name of the build" do
+          build.name.should == "Thrift - Default"
+        end
 
-        client.stub :token => "fake-token"
-        user = "fake-user"
-
-        http.should_receive(:post).
-             with("/api/rest/getLatestUserBuilds.action", :auth => "fake-token", :user => user).
-             and_return(mock_xml_doc)
-
-        client.latest_builds_for(user).should == ["some", "objects"]
-      end
-
-      it "fetches the latest build results for a given key" do
-        pending
-      end
-    end # Remote
-
-    describe Remote::Build do
-      let(:build) { Remote::Build.new(xml_fixture("build").css("build").first) }
-
-      it "should know if the build is enabled" do
-        build.should be_enabled
-      end
-
-      it "should know the name of the build" do
-        build.name.should == "Thrift - Default"
-      end
-
-      it "should know the key of the build" do
-        build.key.should == "THRIFT-DEFAULT"
-      end
-    end
+        it "should know the key of the build" do
+          build.key.should == "THRIFT-DEFAULT"
+        end
+      end # Remote::Build
+    end # describe Remote
   end # Client
 end # Bamboo

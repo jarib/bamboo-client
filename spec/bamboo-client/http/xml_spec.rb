@@ -19,7 +19,11 @@ module Bamboo
       end
 
       describe Xml::Doc do
-        let(:wrapped) { mock("nokogiri document") }
+        let(:wrapped) { 
+          m = mock("nokogiri document") 
+          m.stub!(:css).with("errors error").and_return []
+          m
+        }
         let(:doc) { Xml::Doc.new(wrapped)}
 
         it "returns the text of the given CSS selector" do

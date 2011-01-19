@@ -6,7 +6,12 @@ module Bamboo
       let(:url)  { "http://bamboo.example.com" }
       let(:http) { mock(Http::Xml) }
       let(:client) { Remote.new(http) }
-      let(:document) { mock(Http::Xml::Doc) }
+      let(:document) {
+        m = mock(Http::Xml::Doc)
+        m.stub(:css).with("errors error").and_return []
+
+        m
+      }
 
       context "authorization" do
         it "logs in" do
@@ -29,7 +34,7 @@ module Bamboo
         it "logs out" do
           http.should_receive(:post).with(
             "/api/rest/logout.action",
-            :token => "foo"
+            :auth => "foo"
           )
 
           client.instance_variable_set "@token", "foo"

@@ -24,7 +24,7 @@ module Bamboo
       end
 
       def logout
-        post :logout, :token => token
+        post :logout, :auth => token
         @token = nil
       end
 

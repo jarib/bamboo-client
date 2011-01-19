@@ -16,3 +16,6 @@ Feature: Bamboo Remote client
     When I fetch a build result
     Then the build result should have a key
     And the build result should have a state
+
+  Scenario: Log out
+    Then I should be able to log out

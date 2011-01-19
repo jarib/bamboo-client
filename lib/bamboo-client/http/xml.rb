@@ -12,6 +12,7 @@ module Bamboo
           def initialize(doc)
             @doc = doc
             puts doc.to_s if $DEBUG
+            assert_no_error
           end
 
           def text_for(css)
@@ -27,6 +28,15 @@ module Bamboo
             node or raise Error, "no node matches selector #{selector.inspect}"
 
             klass.new node, *extra_args
+          end
+
+          private
+
+          def assert_no_error
+            errors = @doc.css("errors error").map { |e| e.text }
+            unless errors.empty?
+              raise Error, "#{errors.join ' '}"
+            end
           end
         end # Doc
 

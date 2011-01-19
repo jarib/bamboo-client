@@ -33,3 +33,7 @@ end
 Then /^I should be able to get the latest result$/ do
   @builds.first.latest_results.should be_kind_of(Bamboo::Client::Remote::BuildResult)
 end
+
+Then /^I should be able to log out$/ do
+  client.logout
+end

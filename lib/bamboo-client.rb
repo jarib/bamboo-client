@@ -1,5 +1,6 @@
 require "uri"
 require "restclient"
+require "time"
 
 require "bamboo-client/version"
 require "bamboo-client/http"

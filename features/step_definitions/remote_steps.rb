@@ -12,7 +12,7 @@ end
 
 Then /^I should get a list of builds$/ do
   @builds.should_not be_empty
-  @builds.each { |e| e.should be_kind_of(Bamboo::Client::Remote::Build)  }
+  @builds.each { |e| e.should be_kind_of(client.class::Build)  }
 end
 
 When /^I fetch a build result$/ do

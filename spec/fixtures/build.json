@@ -1,0 +1,12 @@
+{
+  "type": "restChainResult",
+  "id": 8487295,
+  "number": 5388,
+  "lifeCycleState": "Finished",
+  "state": "Successful",
+  "key": "IAD-DEFAULT-5388",
+  "link": {
+    "rel": "self",
+    "href": "http://localhost:8085/rest/api/latest/result/IAD-DEFAULT-5388"
+  }
+}

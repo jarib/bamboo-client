@@ -15,3 +15,8 @@ Feature: Bamboo REST client
     When I fetch all projects
     Then I should get a list of projects
     And all projects should have a key
+
+  Scenario: Fetch all builds
+    When I fetch all builds
+    Then I should get a list of builds
+    And all builds should have a state

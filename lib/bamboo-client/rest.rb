@@ -21,6 +21,10 @@ module Bamboo
         get("project").auto_expand Project
       end
 
+      def builds
+        get("build").auto_expand Build
+      end
+
       private
 
       def get(what)
@@ -70,6 +74,36 @@ module Bamboo
           @data.fetch("link")['href']
         end
       end # Project
+
+      class Build
+        def initialize(data)
+          @data = data
+        end
+
+        def state
+          @data.fetch('state').downcase.to_sym
+        end
+
+        def life_cycle_state
+          @data.fetch("lifeCycleState").downcase.to_sym
+        end
+
+        def number
+          @data['number']
+        end
+
+        def key
+          @data['key']
+        end
+
+        def id
+          @data['id']
+        end
+
+        def url
+          @data.fetch("link")['href']
+        end
+      end # Build
 
     end # Rest
   end # Client

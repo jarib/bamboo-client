@@ -24,3 +24,10 @@ Then /^all projects should have a key$/ do
   @projects.each { |e| e.key.should be_kind_of(String) }
 end
 
+When /^I fetch all builds$/ do
+  @builds = client.builds
+end
+
+Then /^all builds should have a state$/ do
+  @builds.each { |b| [:successful, :failed].should include(b.state) }
+end

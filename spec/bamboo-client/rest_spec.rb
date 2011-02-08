@@ -26,6 +26,15 @@ module Bamboo
         client.projects.should == %w[foo bar]
       end
 
+      it "should be able to fetch builds" do
+        document.should_receive(:auto_expand).with(Rest::Build).and_return %w[foo bar]
+
+        http.should_receive(:get).with("/rest/api/latest/build").
+                                  and_return(document)
+
+        client.builds.should == %w[foo bar]
+      end
+
       describe Rest::Plan do
         let(:data) { json_fixture("plan") }
         let(:plan) { Rest::Plan.new data  }
@@ -65,6 +74,35 @@ module Bamboo
 
         it "has a URL" do
           plan.url.should == "http://xserve.openqa.org:8085/rest/api/latest/project/S2J"
+        end
+      end
+
+      describe Rest::Build do
+        let(:data) { json_fixture("build") }
+        let(:build) { Rest::Build.new data }
+
+        it "has a key" do
+          build.key.should == "IAD-DEFAULT-5388"
+        end
+
+        it "has a state" do
+          build.state.should == :successful
+        end
+
+        it "has an id" do
+          build.id.should == 8487295
+        end
+
+        it "has a number" do
+          build.number.should == 5388
+        end
+
+        it "has a life cycle state" do
+          build.life_cycle_state.should == :finished
+        end
+
+        it "has a URL" do
+          build.url.should == "http://localhost:8085/rest/api/latest/result/IAD-DEFAULT-5388"
         end
       end
 

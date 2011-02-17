@@ -32,7 +32,7 @@ module Bamboo
             "a" => {"some" => "data"}
           )
 
-          doc.auto_expand(SpecHelper::Wrapper).obj.should == {"some" => "data"}
+          doc.auto_expand(SpecHelper::Wrapper, nil).obj.should == {"some" => "data"}
         end
 
         it "auto expands Arrays" do
@@ -43,7 +43,7 @@ module Bamboo
             "a" => expected
           )
 
-          actual = doc.auto_expand(SpecHelper::Wrapper).map { |e| e.obj }
+          actual = doc.auto_expand(SpecHelper::Wrapper, nil).map { |e| e.obj }
           actual.should == expected
         end
 
@@ -56,7 +56,7 @@ module Bamboo
             }
           )
 
-          actual = doc.auto_expand(SpecHelper::Wrapper).map { |e| e.obj }
+          actual = doc.auto_expand(SpecHelper::Wrapper, nil).map { |e| e.obj }
           actual.should == %w[foo bar]
         end
 
@@ -66,7 +66,12 @@ module Bamboo
             "a" => 1
           )
 
-          lambda { doc.auto_expand(SpecHelper::Wrapper) }.should raise_error(TypeError)
+          lambda { doc.auto_expand(SpecHelper::Wrapper, nil) }.should raise_error(TypeError)
+        end
+
+        it "returns a doc for the given key" do
+          doc = Json::Doc.new("foo" => {"bar" => "baz"})
+          doc.doc_for("foo").data.should == {"bar" => "baz"}
         end
       end
 

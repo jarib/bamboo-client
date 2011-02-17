@@ -1,0 +1,20 @@
+{
+  "changesetId": "131",
+  "fullName": "Joe Developer",
+  "userName": "joedev",
+  "author": "joedev",
+  "expand": "files",
+  "comment": "Fixed the config thing.",
+  "date": "2011-01-20T10:04:47.000+01:00",
+  "files": {
+    "size": 1,
+    "max-result": 1,
+    "start-index": 0,
+    "file": [
+      {
+        "name": "/trunk/server/src/main/resources/some-config.ini",
+        "revision": "131"
+      }
+    ]
+  }
+}

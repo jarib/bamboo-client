@@ -1,0 +1,76 @@
+{
+  "id": 8159340,
+  "number": 29,
+  "lifeCycleState": "Finished",
+  "state": "Successful",
+  "key": "ADS-DEFAULT-29",
+  "expand": "changes,metadata,stages,labels,jiraIssues,comments",
+  "link": {
+    "rel": "self",
+    "href": "http://localhost:8085/rest/api/latest/build/ADS-DEFAULT-29"
+  },
+  "buildStartedTime": "2011-01-20T10:08:41.000+01:00",
+  "buildCompletedTime": "2011-01-20T10:09:32.000+01:00",
+  "buildDurationInSeconds": 51,
+  "buildDuration": 51074,
+  "buildDurationDescription": "51 seconds",
+  "buildRelativeTime": "4 weeks ago",
+  "vcsRevisionKey": "131",
+  "buildTestSummary": "13 passed",
+  "successfulTestCount": 13,
+  "failedTestCount": 0,
+  "buildReason": "Code has changed",
+  "stages": {
+    "size": 1,
+    "max-result": 1,
+    "start-index": 0
+  },
+  "labels": {
+    "size": 0,
+    "max-result": 0,
+    "start-index": 0
+  },
+  "jiraIssues": {
+    "size": 1,
+    "max-result": 1,
+    "start-index": 0
+  },
+  "comments": {
+    "size": 0,
+    "max-result": 0,
+    "start-index": 0
+  },
+  "changes": {
+    "expand": "change",
+    "size": 1,
+    "max-result": 1,
+    "start-index": 0,
+    "change": [
+      {
+        "changesetId": "131",
+        "fullName": "Joe Developer",
+        "userName": "joedev",
+        "author": "joedev",
+        "expand": "files",
+        "comment": "Fixed the config thing.",
+        "date": "2011-01-20T10:04:47.000+01:00",
+        "files": {
+          "size": 1,
+          "max-result": 1,
+          "start-index": 0,
+          "file": [
+            {
+              "name": "/trunk/server/src/main/resources/some-config.ini",
+              "revision": "131"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "metadata": {
+    "size": 7,
+    "max-result": 7,
+    "start-index": 0
+  }
+}

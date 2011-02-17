@@ -14,26 +14,27 @@ module Bamboo
       end
 
       def plans
-        get("plan").auto_expand Plan
+        get("plan/").auto_expand Plan, @http
       end
 
       def projects
-        get("project").auto_expand Project
+        get("project/").auto_expand Project, @http
       end
 
       def builds
-        get("build").auto_expand Build
+        get("build/").auto_expand Build, @http
       end
 
       private
 
       def get(what)
-        @http.get "#{@service}/#{what}"
+        @http.get File.join(@service, what)
       end
 
       class Plan
-        def initialize(data)
+        def initialize(data, http)
           @data = data
+          @http = http
         end
 
         def enabled?
@@ -58,8 +59,9 @@ module Bamboo
       end # Plan
 
       class Project
-        def initialize(data)
+        def initialize(data, http)
           @data = data
+          @http = http
         end
 
         def name
@@ -76,8 +78,11 @@ module Bamboo
       end # Project
 
       class Build
-        def initialize(data)
+        def initialize(data, http)
           @data = data
+          @http = http
+
+          @changes = nil
         end
 
         def state
@@ -103,7 +108,67 @@ module Bamboo
         def url
           @data.fetch("link")['href']
         end
+
+        def uri
+          @uri ||= URI.parse(url)
+        end
+
+        def changes
+          @changes ||= (
+            doc = fetch_details("changes.change.files").doc_for('changes')
+            doc.auto_expand Change, @http
+          )
+        end
+
+        private
+
+        def fetch_details(expand)
+          @http.get(uri, :expand => expand)
+        end
       end # Build
+
+      class Change
+        def initialize(data, http)
+          @data = data
+          @http = http
+        end
+
+        def id
+          @data['changesetId']
+        end
+
+        def date
+          Time.parse @data['date']
+        end
+
+        def author
+          @data['author']
+        end
+
+        def full_name
+          @data['fullName']
+        end
+
+        def user_name
+          @data['userName']
+        end
+
+        def comment
+          @data['comment']
+        end
+
+        def files
+          # could use expand here
+          Array(@data.fetch('files')['file']).map do |data|
+            {
+              :name     => data['name'],
+              :revision => data['revision']
+            }
+          end
+        end
+
+
+      end # Change
 
     end # Rest
   end # Client

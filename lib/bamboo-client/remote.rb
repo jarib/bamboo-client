@@ -135,7 +135,10 @@ module Bamboo
         end
 
         def state
-          @doc.css("buildState").text.downcase.gsub(/ /, '_').to_sym
+          text = @doc.css("buildState").text
+
+          return 'unknown' if text.strip.empty?
+          text.downcase.gsub(/ /, '_').to_sym
         end
 
         def successful?

@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = "bamboo-client"
 
   s.add_development_dependency "rspec"
-  s.add_development_dependency "cucumber"
+  s.add_development_dependency "cucumber", ">= 0.10.0"
   s.add_development_dependency "simplecov"
 
   s.add_dependency "rest-client"

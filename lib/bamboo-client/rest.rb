@@ -8,9 +8,10 @@ module Bamboo
     #
 
     class Rest < Abstract
+      SERVICE = "/rest/api/latest"
+
       def initialize(http)
         super
-        @service = "/rest/api/latest"
       end
 
       def plans
@@ -28,7 +29,7 @@ module Bamboo
       private
 
       def get(what)
-        @http.get File.join(@service, what)
+        @http.get File.join(SERVICE, what)
       end
 
       class Plan
@@ -55,6 +56,10 @@ module Bamboo
 
         def url
           @data.fetch("link")['href']
+        end
+
+        def queue
+          @http.post File.join(SERVICE, "queue/#{key}")
         end
       end # Plan
 

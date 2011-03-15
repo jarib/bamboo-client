@@ -58,6 +58,11 @@ module Bamboo
         it "has a URL" do
           plan.url.should == "http://xserve.openqa.org:8085/rest/api/latest/plan/S2RB-REMWIN"
         end
+
+        it "can be queued" do
+          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN")
+          plan.queue
+        end
       end # Plan
 
       describe Rest::Project do

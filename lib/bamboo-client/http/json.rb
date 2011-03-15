@@ -13,6 +13,7 @@ module Bamboo
 
           def initialize(data)
             @data = data
+
             pp @data if $DEBUG
           end
 

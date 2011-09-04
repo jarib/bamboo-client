@@ -14,9 +14,10 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "bamboo-client"
 
-  s.add_development_dependency "rspec"
+  s.add_development_dependency "rspec", "~> 2.5"
   s.add_development_dependency "cucumber", ">= 0.10.0"
   s.add_development_dependency "simplecov"
+  s.add_development_dependency "rake", "~> 0.9"
 
   s.add_dependency "rest-client"
   s.add_dependency "json"

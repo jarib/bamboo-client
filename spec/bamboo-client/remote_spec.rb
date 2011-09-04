@@ -214,12 +214,12 @@ module Bamboo
         end
 
         it "returns nil if start time can not be parsed" do
-          doc.stub(:css).and_return mock(:text => "foo")
+          doc.stub(:css).and_return mock(:text => "Sun Sep 32")
           result.start_time.should be_nil
         end
 
         it "returns nil if start time can not be parsed" do
-          doc.stub(:css).and_return mock(:text => "foo")
+          doc.stub(:css).and_return mock(:text => "Sun Sep 32")
           result.end_time.should be_nil
         end
 

@@ -28,6 +28,11 @@ When /^I fetch all results$/ do
   @results = client.results
 end
 
+Then /^I should get a list of results$/ do
+  @results.should_not be_empty
+  @results.each { |result| result.should be_kind_of(Bamboo::Client::Rest::Result) }
+end
+
 Then /^all results should have a state$/ do
   @results.each { |r| [:successful, :failed].should include(r.state) }
 end

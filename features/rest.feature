@@ -16,14 +16,13 @@ Feature: Bamboo REST client
     Then I should get a list of projects
     And all projects should have a key
 
-  Scenario: Fetch all builds
-    When I fetch all builds
-    Then I should get a list of builds
-    And all builds should have a state
+  Scenario: Fetch all results
+    When I fetch all results
+    Then I should get a list of results
+    And all results should have a state
   
   Scenario: Authenticated API
     When I log in
     Then I should get a session ID
-    When I fetch all the plans
-    Then I should get a list of plans
-    And all plans should have a key
+    When I fetch all results
+    Then all results should have a state

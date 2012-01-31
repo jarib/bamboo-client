@@ -38,7 +38,7 @@ module Bamboo
       end
 
       def results
-        get("results/").auto_expand Result, @http
+        get("result/").auto_expand Result, @http
       end
 
       private

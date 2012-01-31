@@ -42,7 +42,7 @@ module Bamboo
       it "should be able to fetch results" do
         document.should_receive(:auto_expand).with(Rest::Result, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/results/", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/result/", nil, nil).
                                   and_return(document)
 
         client.results.should == %w[foo bar]

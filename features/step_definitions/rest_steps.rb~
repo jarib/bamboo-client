@@ -32,10 +32,7 @@ Then /^all builds should have a state$/ do
   @builds.each { |b| [:successful, :failed].should include(b.state) }
 end
 
-When /^I log in$/ do
-  client.login user, password
-end
-
-Then /^I should get a session ID$/ do
-  client.cookies.has_key? :JSESSIONID
+When /^I login to in with my credentials, (.*) and (.*)$/ do |username, password|
+  client.login(username, password)
+  client.cookies != nil
 end

@@ -9,7 +9,7 @@ module Bamboo
 
         it "does a GET" do
           RestClient.should_receive(:get).with(
-            "#{url}/", :accept => :json
+            "#{url}/", :accept => :json, :cookies => nil
             ).and_return('{"some": "data"}')
 
           doc = json.get "/"
@@ -18,11 +18,20 @@ module Bamboo
 
         it "does a POST" do
           RestClient.should_receive(:post).with(
-            "#{url}/", '{"some":"data"}', :accept => :json, :content_type => :json
+            "#{url}/", '{"some":"data"}', :accept => :json, :content_type => :json, :cookies => nil
             ).and_return('')
 
           json.post("/", :some => "data").should be_nil
         end
+
+        it "returns cookies from GET" do
+          net_http_resp = Net::HTTPResponse.new(1.0, 200, "OK")
+          net_http_resp.add_field 'Set-Cookie', 'Cookie=Value;'
+          resp = RestClient::Response.create("",net_http_resp, nil)
+          RestClient.should_receive(:get).with("#{url}/", :params => nil).and_return(resp)
+          cookies = json.get_cookies("/").should  == {'Cookie' => 'Value'}
+        end
+
       end
 
       describe Json::Doc do

@@ -7,11 +7,24 @@ module Bamboo
       let(:document) { mock(Http::Json::Doc) }
       let(:client) { Rest.new(http) }
 
+      it "logs in" do
+        username = 'something'
+        password = 'somethingelse'
+        http.should_receive(:get_cookies).with(
+          '/rest/api/latest/plan', 
+          {:os_authType => 'basic', :os_username => username, :os_password => password}).
+          and_return({'JSESSIONID' => '1'})
+        client.login username, password
+        client.cookies.should == { :JSESSIONID => '1'}
+      end
+
       it "should be able to fetch plans" do
         document.should_receive(:auto_expand).with(Rest::Plan, http).and_return %w[foo bar]
 
         http.should_receive(:get).with(
-          "/rest/api/latest/plan/"
+          "/rest/api/latest/plan/",
+          nil,
+          nil
         ).and_return(document)
 
         client.plans.should == %w[foo bar]
@@ -20,7 +33,7 @@ module Bamboo
       it "should be able to fetch projects" do
         document.should_receive(:auto_expand).with(Rest::Project, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/project/").
+        http.should_receive(:get).with("/rest/api/latest/project/", nil, nil).
                                   and_return(document)
 
         client.projects.should == %w[foo bar]
@@ -29,7 +42,7 @@ module Bamboo
       it "should be able to fetch builds" do
         document.should_receive(:auto_expand).with(Rest::Build, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/build/").
+        http.should_receive(:get).with("/rest/api/latest/build/", nil, nil).
                                   and_return(document)
 
         client.builds.should == %w[foo bar]

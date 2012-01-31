@@ -37,8 +37,8 @@ module Bamboo
         get("project/").auto_expand Project, @http
       end
 
-      def builds
-        get("build/").auto_expand Build, @http
+      def results
+        get("results/").auto_expand Result, @http
       end
 
       private
@@ -97,7 +97,7 @@ module Bamboo
         end
       end # Project
 
-      class Build
+      class Result
         def initialize(data, http)
           @data = data
           @http = http
@@ -145,7 +145,7 @@ module Bamboo
         def fetch_details(expand)
           @http.get(uri, :expand => expand)
         end
-      end # Build
+      end # Result
 
       class Change
         def initialize(data, http)

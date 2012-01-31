@@ -39,13 +39,13 @@ module Bamboo
         client.projects.should == %w[foo bar]
       end
 
-      it "should be able to fetch builds" do
-        document.should_receive(:auto_expand).with(Rest::Build, http).and_return %w[foo bar]
+      it "should be able to fetch results" do
+        document.should_receive(:auto_expand).with(Rest::Result, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/build/", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/results/", nil, nil).
                                   and_return(document)
 
-        client.builds.should == %w[foo bar]
+        client.results.should == %w[foo bar]
       end
 
       describe Rest::Plan do
@@ -95,38 +95,38 @@ module Bamboo
         end
       end
 
-      describe Rest::Build do
-        let(:data) { json_fixture("build") }
-        let(:build) { Rest::Build.new data, http }
+      describe Rest::Result do
+        let(:data) { json_fixture("result") }
+        let(:result) { Rest::Result.new data, http }
 
         it "has a key" do
-          build.key.should == "IAD-DEFAULT-5388"
+          result.key.should == "IAD-DEFAULT-5388"
         end
 
         it "has a state" do
-          build.state.should == :successful
+          result.state.should == :successful
         end
 
         it "has an id" do
-          build.id.should == 8487295
+          result.id.should == 8487295
         end
 
         it "has a number" do
-          build.number.should == 5388
+          result.number.should == 5388
         end
 
         it "has a life cycle state" do
-          build.life_cycle_state.should == :finished
+          result.life_cycle_state.should == :finished
         end
 
         it "has a URL" do
-          build.url.should == "http://localhost:8085/rest/api/latest/result/IAD-DEFAULT-5388"
+          result.url.should == "http://localhost:8085/rest/api/latest/result/IAD-DEFAULT-5388"
         end
 
         it "has a list of changes" do
           # TODO: arg expectation
-          http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("build_with_changes"))
-          build.changes.first.should be_kind_of(Rest::Change)
+          http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("result_with_changes"))
+          result.changes.first.should be_kind_of(Rest::Change)
         end
       end
 

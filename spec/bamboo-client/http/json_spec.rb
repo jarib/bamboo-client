@@ -9,7 +9,7 @@ module Bamboo
 
         it "does a GET" do
           RestClient.should_receive(:get).with(
-            "#{url}/", :accept => :json
+            "#{url}/", :accept => :json, :cookies => nil
             ).and_return('{"some": "data"}')
 
           doc = json.get "/"
@@ -18,7 +18,7 @@ module Bamboo
 
         it "does a POST" do
           RestClient.should_receive(:post).with(
-            "#{url}/", '{"some":"data"}', :accept => :json, :content_type => :json
+            "#{url}/", '{"some":"data"}', :accept => :json, :content_type => :json, :cookies => nil
             ).and_return('')
 
           json.post("/", :some => "data").should be_nil

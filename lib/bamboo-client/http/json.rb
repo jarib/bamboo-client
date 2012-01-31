@@ -13,7 +13,6 @@ module Bamboo
 
           def initialize(data)
             @data = data
-
             pp @data if $DEBUG
           end
 
@@ -40,14 +39,14 @@ module Bamboo
           end
         end # Doc
 
-        def post(uri_or_path, data = {})
-          resp = RestClient.post(uri_for(uri_or_path), data.to_json, :accept => :json, :content_type => :json)
+        def post(uri_or_path, data = {}, cookies = nil)
+          resp = RestClient.post(uri_for(uri_or_path), data.to_json, :accept => :json, :content_type => :json, :cookies => cookies)
           Doc.from(resp) unless resp.empty?
         end
 
-        def get(uri_or_path, params = nil)
+        def get(uri_or_path, params = nil, cookies = nil)
           uri = uri_for(uri_or_path, params)
-          Doc.from RestClient.get(uri, :accept => :json)
+          Doc.from RestClient.get(uri, :accept => :json, :cookies => cookies)
         end
 
       end # Json

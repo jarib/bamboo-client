@@ -12,6 +12,15 @@ module Bamboo
 
       def initialize(http)
         super
+        @cookies = nil
+      end
+
+      def login(username, password)
+        url = File.join(SERVICE, 'plan/')
+        req = RestClient.get(url, params = {:os_authType => 'basic', :os_username => username, :os_password => password})
+        if req.code == 200
+          @cookies = {:JSESSIONID => req.cookies['JSESSIONID']}
+        end
       end
 
       def plans
@@ -29,7 +38,7 @@ module Bamboo
       private
 
       def get(what)
-        @http.get File.join(SERVICE, what)
+        @http.get File.join(SERVICE, what), nil, @cookies
       end
 
       class Plan

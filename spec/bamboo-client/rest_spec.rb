@@ -11,7 +11,9 @@ module Bamboo
         document.should_receive(:auto_expand).with(Rest::Plan, http).and_return %w[foo bar]
 
         http.should_receive(:get).with(
-          "/rest/api/latest/plan/"
+          "/rest/api/latest/plan/",
+          nil,
+          nil
         ).and_return(document)
 
         client.plans.should == %w[foo bar]
@@ -20,7 +22,7 @@ module Bamboo
       it "should be able to fetch projects" do
         document.should_receive(:auto_expand).with(Rest::Project, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/project/").
+        http.should_receive(:get).with("/rest/api/latest/project/", nil, nil).
                                   and_return(document)
 
         client.projects.should == %w[foo bar]
@@ -29,7 +31,7 @@ module Bamboo
       it "should be able to fetch builds" do
         document.should_receive(:auto_expand).with(Rest::Build, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/build/").
+        http.should_receive(:get).with("/rest/api/latest/build/", nil, nil).
                                   and_return(document)
 
         client.builds.should == %w[foo bar]

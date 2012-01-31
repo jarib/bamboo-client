@@ -24,12 +24,17 @@ Then /^all projects should have a key$/ do
   @projects.each { |e| e.key.should be_kind_of(String) }
 end
 
-When /^I fetch all builds$/ do
-  @builds = client.builds
+When /^I fetch all results$/ do
+  @results = client.results
 end
 
-Then /^all builds should have a state$/ do
-  @builds.each { |b| [:successful, :failed].should include(b.state) }
+Then /^I should get a list of results$/ do
+  @results.should_not be_empty
+  @results.each { |result| result.should be_kind_of(Bamboo::Client::Rest::Result) }
+end
+
+Then /^all results should have a state$/ do
+  @results.each { |r| [:successful, :failed].should include(r.state) }
 end
 
 When /^I log in$/ do

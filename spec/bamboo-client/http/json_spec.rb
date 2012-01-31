@@ -25,8 +25,11 @@ module Bamboo
         end
 
         it "returns cookies from GET" do
-          RestClient.should_receive(:get).with("#{url}/", :params => nil).and_return(RestClient::Response.create('',{'set_cookie' => 'Cookie=value'}, nil))
-          cookies = json.get_cookies("/").should eq({'Cookie' => 'value'})
+          net_http_resp = Net::HTTPResponse.new(1.0, 200, "OK")
+          net_http_resp.add_field 'Set-Cookie', 'Cookie=Value;'
+          resp = RestClient::Response.create("",net_http_resp, nil)
+          RestClient.should_receive(:get).with("#{url}/", :params => nil).and_return(resp)
+          cookies = json.get_cookies("/").should  == {'Cookie' => 'Value'}
         end
 
       end

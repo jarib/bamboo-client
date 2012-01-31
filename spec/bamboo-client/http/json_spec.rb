@@ -23,6 +23,12 @@ module Bamboo
 
           json.post("/", :some => "data").should be_nil
         end
+
+        it "returns cookies from GET" do
+          RestClient.should_receive(:get).with("#{url}/", :params => nil).and_return(RestClient::Response.create('',{'set_cookie' => 'Cookie=value'}, nil))
+          cookies = json.get_cookies("/").should eq({'Cookie' => 'value'})
+        end
+
       end
 
       describe Json::Doc do

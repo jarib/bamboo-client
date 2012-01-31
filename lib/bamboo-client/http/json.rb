@@ -49,6 +49,12 @@ module Bamboo
           Doc.from RestClient.get(uri, :accept => :json, :cookies => cookies)
         end
 
+        def get_cookies(uri_or_path, params = nil)
+          uri = uri_for(uri_or_path, nil)
+          resp = RestClient.get(uri, :params => params)
+          resp.cookies
+        end
+
       end # Json
     end # Http
   end # Client

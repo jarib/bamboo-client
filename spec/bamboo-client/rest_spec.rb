@@ -7,6 +7,17 @@ module Bamboo
       let(:document) { mock(Http::Json::Doc) }
       let(:client) { Rest.new(http) }
 
+      it "logs in" do
+        username = 'something'
+        password = 'somethingelse'
+        http.should_receive(:get_cookies).with(
+          '/rest/api/latest/plan', 
+          {:os_authType => 'basic', :os_username => username, :os_password => password}).
+          and_return({'JSESSIONID' => '1'})
+        client.login username, password
+        client.cookies.should == { :JSESSIONID => '1'}
+      end
+
       it "should be able to fetch plans" do
         document.should_receive(:auto_expand).with(Rest::Plan, http).and_return %w[foo bar]
 

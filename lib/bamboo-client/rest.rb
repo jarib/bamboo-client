@@ -8,6 +8,9 @@ module Bamboo
     #
 
     class Rest < Abstract
+      
+      attr_reader :cookies
+
       SERVICE = "/rest/api/latest"
 
       def initialize(http)
@@ -16,11 +19,14 @@ module Bamboo
       end
 
       def login(username, password)
-        url = File.join(SERVICE, 'plan/')
-        req = RestClient.get(url, params = {:os_authType => 'basic', :os_username => username, :os_password => password})
-        if req.code == 200
-          @cookies = {:JSESSIONID => req.cookies['JSESSIONID']}
-        end
+        url = File.join(SERVICE, 'plan')
+        resp = @http.get_cookies(url, {
+                                        :os_authType => 'basic', 
+                                        :os_username => username, 
+                                        :os_password => password
+                                        }
+                                  )
+        @cookies = {:JSESSIONID => resp['JSESSIONID']}
       end
 
       def plans
@@ -37,8 +43,8 @@ module Bamboo
 
       private
 
-      def get(what)
-        @http.get File.join(SERVICE, what), nil, @cookies
+      def get(what, params = nil)
+        @http.get File.join(SERVICE, what), params, @cookies
       end
 
       class Plan

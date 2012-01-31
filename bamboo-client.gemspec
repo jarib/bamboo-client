@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name        = "bamboo-client"
   s.version     = Bamboo::Client::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Jari Bakken"]
-  s.email       = ["jari.bakken@gmail.com"]
+  s.authors     = ["Jari Bakken", "Peter Marsh"]
+  s.email       = ["jari.bakken@gmail.com", "pete.d.marsh@gmail.com"]
   s.homepage    = ""
   s.summary     = %q{Ruby client for Atlassian Bamboo's REST APIs}
   s.description = %q{Ruby client for Atlassian Bamboo's REST APIs}

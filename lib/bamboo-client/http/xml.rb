@@ -41,7 +41,15 @@ module Bamboo
         end # Doc
 
         def post(path, data = {})
-          Doc.from RestClient.post(uri_for(path), data)
+          resp = RestClient.post(uri_for(path), data) do |response, request, result, &block|
+            if [301, 302, 307].include? response.code
+              response.follow_redirection(request, result, &block)
+            else
+              response.return!(request, result, &block)
+            end
+          end
+
+          Doc.from resp
         end
 
       end # Xml

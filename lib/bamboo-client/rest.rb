@@ -8,7 +8,7 @@ module Bamboo
     #
 
     class Rest < Abstract
-      
+
       attr_reader :cookies
 
       SERVICE = "/rest/api/latest"
@@ -21,8 +21,8 @@ module Bamboo
       def login(username, password)
         url = File.join(SERVICE, 'plan')
         resp = @http.get_cookies(url, {
-                                        :os_authType => 'basic', 
-                                        :os_username => username, 
+                                        :os_authType => 'basic',
+                                        :os_username => username,
                                         :os_password => password
                                         }
                                   )

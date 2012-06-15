@@ -73,7 +73,8 @@ module Bamboo
         end
 
         it "can be queued" do
-          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN")
+          http.should_receive(:cookies)
+          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN", {}, nil)
           plan.queue
         end
       end # Plan

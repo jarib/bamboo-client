@@ -40,7 +40,7 @@ module Bamboo
         end # Doc
 
         attr_reader :cookies
-        
+
         def post(uri_or_path, data = {}, cookies = nil)
           resp = RestClient.post(uri_for(uri_or_path), data.to_json, :accept => :json, :content_type => :json, :cookies => cookies)
           Doc.from(resp) unless resp.empty?

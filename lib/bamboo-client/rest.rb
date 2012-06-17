@@ -74,7 +74,7 @@ module Bamboo
         end
 
         def queue
-          @http.post File.join(SERVICE, "queue/#{key}")
+          @http.post File.join(SERVICE, "queue/#{key}"), {}, @http.cookies
         end
       end # Plan
 

@@ -39,6 +39,8 @@ module Bamboo
           end
         end # Doc
 
+        attr_reader :cookies
+        
         def post(uri_or_path, data = {}, cookies = nil)
           resp = RestClient.post(uri_for(uri_or_path), data.to_json, :accept => :json, :content_type => :json, :cookies => cookies)
           Doc.from(resp) unless resp.empty?
@@ -52,7 +54,7 @@ module Bamboo
         def get_cookies(uri_or_path, params = nil)
           uri = uri_for(uri_or_path, nil)
           resp = RestClient.get(uri, :params => params)
-          resp.cookies
+          @cookies = resp.cookies
         end
 
       end # Json

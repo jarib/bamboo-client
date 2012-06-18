@@ -44,3 +44,8 @@ end
 Then /^I should get a session ID$/ do
   client.cookies.has_key? :JSESSIONID
 end
+
+When /^I fetch results for a specific plan$/ do
+  key = client.plans.first.key
+  @results = client.results_for key
+end

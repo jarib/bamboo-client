@@ -20,7 +20,12 @@ Feature: Bamboo REST client
     When I fetch all results
     Then I should get a list of results
     And all results should have a state
-  
+
+  Scenario: Fetch result for specific plan
+    When I fetch results for a specific plan
+    Then I should get a list of results
+    And all results should have a state
+
   Scenario: Authenticated API
     When I log in
     Then I should get a session ID

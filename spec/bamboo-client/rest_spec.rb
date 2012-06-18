@@ -11,7 +11,7 @@ module Bamboo
         username = 'something'
         password = 'somethingelse'
         http.should_receive(:get_cookies).with(
-          '/rest/api/latest/plan', 
+          '/rest/api/latest/plan',
           {:os_authType => 'basic', :os_username => username, :os_password => password}).
           and_return({'JSESSIONID' => '1'})
         client.login username, password
@@ -46,6 +46,15 @@ module Bamboo
                                   and_return(document)
 
         client.results.should == %w[foo bar]
+      end
+
+      it "should be able to fetch results for a specific key" do
+        document.should_receive(:auto_expand).with(Rest::Result, http).and_return %w[foo bar]
+
+        http.should_receive(:get).with("/rest/api/latest/result/SOME-KEY", nil, nil).
+                                  and_return(document)
+
+        client.results_for("SOME-KEY").should == %w[foo bar]
       end
 
       describe Rest::Plan do
@@ -104,8 +113,16 @@ module Bamboo
           result.key.should == "IAD-DEFAULT-5388"
         end
 
+        it "has a plan key" do
+          result.plan_key.should == "IAD-DEFAULT"
+        end
+
         it "has a state" do
           result.state.should == :successful
+        end
+
+        it "knows if the build was successful" do
+          result.should be_successful
         end
 
         it "has an id" do
@@ -124,10 +141,36 @@ module Bamboo
           result.url.should == "http://localhost:8085/rest/api/latest/result/IAD-DEFAULT-5388"
         end
 
-        it "has a list of changes" do
-          # TODO: arg expectation
-          http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("result_with_changes"))
-          result.changes.first.should be_kind_of(Rest::Change)
+        context "with details" do
+          before do
+            # TODO: arg/uri expectation?
+            http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("result_with_changes"))
+          end
+
+          it "has a list of changes" do
+            result.changes.first.should be_kind_of(Rest::Change)
+          end
+
+          it "has a build reason" do
+            result.reason.should == "Code has changed"
+          end
+
+          it "has a start time" do
+            result.start_time.should == Time.parse("2011-01-20T10:08:41.000+01:00")
+          end
+          it "has a relative date" do
+            result.relative_date.should == "4 weeks ago"
+            result.relative_time.should == "4 weeks ago"
+          end
+
+          it "has a failed test count" do
+            result.failed_test_count.should == 0
+          end
+
+          it "has a successful test count" do
+            result.successful_test_count.should == 13
+          end
+
         end
       end
 

@@ -41,6 +41,10 @@ module Bamboo
         get("result/").auto_expand Result, @http
       end
 
+      def results_for(key)
+        get("result/#{URI.escape key}").auto_expand Result, @http
+      end
+
       private
 
       def get(what, params = nil)
@@ -113,12 +117,41 @@ module Bamboo
           @data.fetch("lifeCycleState").downcase.to_sym
         end
 
+        def successful?
+          state == :successful
+        end
+
+        def reason
+          details.fetch('buildReason')
+        end
+
+        def relative_time
+          details.fetch('buildRelativeTime')
+        end
+        alias_method :relative_date, :relative_time
+
+        def failed_test_count
+          details.fetch('failedTestCount')
+        end
+
+        def successful_test_count
+          details.fetch('successfulTestCount')
+        end
+
+        def start_time
+          Time.parse details.fetch('buildStartedTime')
+        end
+
         def number
           @data['number']
         end
 
         def key
           @data['key']
+        end
+
+        def plan_key
+          key[/^(.+)-\d+$/, 1]
         end
 
         def id
@@ -141,6 +174,10 @@ module Bamboo
         end
 
         private
+
+        def details
+          @details ||= @http.get(uri).data
+        end
 
         def fetch_details(expand)
           @http.get(uri, :expand => expand)

@@ -45,6 +45,10 @@ module Bamboo
         get("result/#{URI.escape key}").auto_expand Result, @http
       end
 
+      def plan_for(key)
+        Plan.new get("plan/#{URI.escape key}").data, @http
+      end
+
       private
 
       def get(what, params = nil)

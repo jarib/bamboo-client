@@ -57,6 +57,15 @@ module Bamboo
         client.results_for("SOME-KEY").should == %w[foo bar]
       end
 
+      it "should be able to fetch a plan for a specific key" do
+        document.should_receive(:data).and_return('some' => 'data')
+
+        http.should_receive(:get).with("/rest/api/latest/plan/SOME-KEY", nil, nil).
+                                  and_return(document)
+
+        client.plan_for("SOME-KEY").should be_kind_of(Rest::Plan)
+      end
+
       describe Rest::Plan do
         let(:data) { json_fixture("plan") }
         let(:plan) { Rest::Plan.new data, http  }

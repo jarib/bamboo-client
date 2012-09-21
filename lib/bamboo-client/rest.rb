@@ -37,6 +37,10 @@ module Bamboo
         get("project/").auto_expand Project, @http
       end
 
+      def project_for(key)
+        Project.new get("project/#{URI.escape key}").data, @http
+      end
+
       def results
         get("result/").auto_expand Result, @http
       end
@@ -82,7 +86,12 @@ module Bamboo
         end
 
         def queue
-          @http.post File.join(SERVICE, "queue/#{key}"), {}, @http.cookies
+          @http.post File.join(SERVICE, "queue/#{URI.escape key}"), {}, @http.cookies
+        end
+
+        def results
+          doc = @http.get File.join(SERVICE, "result/#{URI.escape key}"), {}, @http.cookies
+          doc.auto_expand Result, @http
         end
       end # Plan
 
@@ -102,6 +111,16 @@ module Bamboo
 
         def url
           @data.fetch("link")['href']
+        end
+
+        def plans
+          @plans ||= (
+            unless @data['plans'] && @data['plans']['plan']
+              @data = @http.get(URI.parse(url), {:expand => 'plans'}, @http.cookies).data
+            end
+
+            @data.fetch('plans').fetch('plan').map { |e| Plan.new(e, @http) }
+          )
         end
       end # Project
 
@@ -144,6 +163,10 @@ module Bamboo
 
         def start_time
           Time.parse details.fetch('buildStartedTime')
+        end
+
+        def completed_time
+          Time.parse details.fetch('buildCompletedTime')
         end
 
         def number

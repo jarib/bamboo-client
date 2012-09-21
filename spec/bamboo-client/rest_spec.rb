@@ -66,6 +66,16 @@ module Bamboo
         client.plan_for("SOME-KEY").should be_kind_of(Rest::Plan)
       end
 
+
+      it "should be able to fetch a project for a specific key" do
+        document.should_receive(:data).and_return('some' => 'data')
+
+        http.should_receive(:get).with("/rest/api/latest/project/SOME-KEY", nil, nil).
+                                  and_return(document)
+
+        client.project_for("SOME-KEY").should be_kind_of(Rest::Project)
+      end
+
       describe Rest::Plan do
         let(:data) { json_fixture("plan") }
         let(:plan) { Rest::Plan.new data, http  }
@@ -95,23 +105,40 @@ module Bamboo
           http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN", {}, {"some" => "cookie"})
           plan.queue
         end
+
+        it 'can fetch results' do
+          document.should_receive(:auto_expand).with(Rest::Result, http)
+          http.should_receive(:cookies).and_return("some" => "cookie")
+          http.should_receive(:get).with("/rest/api/latest/result/S2RB-REMWIN", {}, {"some" => "cookie"}).and_return(document)
+
+          plan.results
+        end
       end # Plan
 
       describe Rest::Project do
         let(:data) { json_fixture("project") }
-        let(:plan) { Rest::Project.new data, http  }
+        let(:project) { Rest::Project.new data, http  }
 
         it "has a name" do
-          plan.name.should == "Selenium 2 Java"
+          project.name.should == "Selenium 2 Java"
         end
 
         it "has a key" do
-          plan.key.should == "S2J"
+          project.key.should == "S2J"
         end
 
         it "has a URL" do
-          plan.url.should == "http://xserve.openqa.org:8085/rest/api/latest/project/S2J"
+          project.url.should == "http://xserve.openqa.org:8085/rest/api/latest/project/S2J"
         end
+
+        it 'can fetch plans' do
+          document.should_receive(:data).and_return('plans' => {'plan' => []})
+          http.should_receive(:cookies).and_return("some" => "cookie")
+          http.should_receive(:get).with(URI.parse(project.url), {:expand => 'plans'}, {"some" => "cookie"}).and_return(document)
+
+          project.plans.should == []
+        end
+
       end
 
       describe Rest::Result do
@@ -167,6 +194,11 @@ module Bamboo
           it "has a start time" do
             result.start_time.should == Time.parse("2011-01-20T10:08:41.000+01:00")
           end
+
+          it "has a completed time" do
+            result.completed_time.should == Time.parse("2011-01-20T10:09:32.000+01:00")
+          end
+
           it "has a relative date" do
             result.relative_date.should == "4 weeks ago"
             result.relative_time.should == "4 weeks ago"

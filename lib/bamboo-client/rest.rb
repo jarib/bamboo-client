@@ -53,6 +53,10 @@ module Bamboo
         Plan.new get("plan/#{URI.escape key}").data, @http
       end
 
+      def queue
+        get("queue/").auto_expand Queue, @http
+      end
+
       private
 
       def get(what, params = nil)
@@ -253,6 +257,77 @@ module Bamboo
 
 
       end # Change
+
+      class Queue
+        def initialize(data, http)
+          @data = data
+          @http = http
+        end
+
+        def size
+          @data['queuedBuilds']['size']
+        end
+
+        def add(key)
+          data = @http.post(File.join(SERVICE, "queue/#{URI.escape key}"), {}, @http.cookies).data
+          QueuedBuild.new(data, @http)
+        end
+
+        def queued_builds
+          @queued_builds ||= (
+            unless @data['queuedBuilds'] && @data['queuedBuilds']['queuedBuild']
+              @data = @http.get(File.join(SERVICE, 'queue'), {:expand => 'queuedBuilds'}, @http.cookies).data
+            end
+
+            begin
+              @data.fetch('queuedBuilds').fetch('queuedBuild').map { |e| QueuedBuild.new(e, @http) }
+            rescue IndexError
+              []
+            end
+          )
+        end
+      end # Queue
+
+      class QueuedBuild
+        def initialize(data, http)
+          @data = data
+          @http = http
+        end
+
+        def url
+          @data.fetch("link")['href']
+        end
+
+        def trigger_reason
+          @data['triggerReason']
+        end
+
+        def build_number
+          @data['buildNumber']
+        end
+
+        def plan_key
+          @data['planKey']
+        end
+
+        def build_result_key
+          @data['buildResultKey']
+        end
+
+        def url
+          @data.fetch("link")['href']
+        end
+
+        def changes
+          @changes ||= (
+            unless @data['changes'] && @data['changes']['change']
+              @data = @http.get(URI.parse(url), {:expand => 'changes'}, @http.cookies).data
+            end
+
+            @data.fetch('changes').fetch('change').map { |e| Change.new(e, @http) }
+          )
+        end
+      end # QueuedBuild
 
     end # Rest
   end # Client

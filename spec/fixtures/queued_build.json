@@ -1,0 +1,10 @@
+{
+  "buildNumber": 42, 
+  "buildResultKey": "DEMOPROJECT-CANARY-JOB1-42", 
+  "link": {
+    "href": "http://localhost:8085/rest/api/latest/result/DEMOPROJECT-CANARY-JOB1-42", 
+    "rel": "self"
+  }, 
+  "planKey": "DEMOPROJECT-CANARY-JOB1", 
+  "triggerReason": "Code has changed"
+}

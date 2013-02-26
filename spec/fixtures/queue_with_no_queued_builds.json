@@ -1,0 +1,12 @@
+{
+    "expand": "queuedBuilds", 
+    "link": {
+        "href": "http://localhost:8085/rest/api/latest/queue/", 
+        "rel": "self"
+    }, 
+    "queuedBuilds": {
+        "max-result": 0, 
+        "size": 0, 
+        "start-index": 0
+    }
+}

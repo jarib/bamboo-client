@@ -48,6 +48,15 @@ module Bamboo
         client.results.should == %w[foo bar]
       end
 
+      it "should be able to fetch the queue" do
+        document.should_receive(:auto_expand).with(Rest::Queue, http).and_return %w[foo bar]
+
+        http.should_receive(:get).with("/rest/api/latest/queue/", nil, nil).
+                                  and_return(document)
+
+        client.queue.should == %w[foo bar]
+      end
+
       it "should be able to fetch results for a specific key" do
         document.should_receive(:auto_expand).with(Rest::Result, http).and_return %w[foo bar]
 
@@ -248,6 +257,57 @@ module Bamboo
         end
       end
 
+      describe Rest::Queue do
+        let(:data) { json_fixture("queue") }
+        let(:queue) { Rest::Queue.new data, http }
+
+        it "has a size" do
+          queue.size.should == 1
+        end
+
+        it "has a list of queued builds when there are queued builds" do
+          http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("queue_with_queued_builds"))
+          http.should_receive(:cookies).and_return("some" => "cookie")
+          queue.queued_builds.first.should be_kind_of(Rest::QueuedBuild)
+        end
+
+        it "has an empty list when there are no queued builds" do
+          http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("queue_with_no_queued_builds"))
+          http.should_receive(:cookies).and_return("some" => "cookie")
+          queue.queued_builds.should be_empty
+        end
+
+        it "can add plan to queue" do
+          http.should_receive(:cookies).and_return("some" => "cookie")
+          http.should_receive(:post).with("/rest/api/latest/queue/DEMOPROJECT-CANARY", {}, {"some" => "cookie"}).and_return Http::Json::Doc.new(json_fixture("queued_build"))
+          queue.add("DEMOPROJECT-CANARY").should be_kind_of(Rest::QueuedBuild)
+        end
+      end
+
+      describe Rest::QueuedBuild do
+        let(:data) { json_fixture("queued_build") }
+        let(:queued_build) { Rest::QueuedBuild.new data, http }
+
+        it "has a trigger reason" do
+          queued_build.trigger_reason.should == "Code has changed"
+        end
+
+        it "has a build number" do
+          queued_build.build_number.should == 42
+        end
+
+        it "has a plan key" do
+          queued_build.plan_key.should == "DEMOPROJECT-CANARY-JOB1"
+        end
+
+        it "has a build result key" do
+          queued_build.build_result_key.should == "DEMOPROJECT-CANARY-JOB1-42"
+        end
+
+        it "has a url" do
+          queued_build.url.should == "http://localhost:8085/rest/api/latest/result/DEMOPROJECT-CANARY-JOB1-42"
+        end
+      end
 
     end # Rest
   end # Client

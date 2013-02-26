@@ -1,0 +1,12 @@
+{
+    "expand": "queuedBuilds", 
+    "link": {
+        "href": "http://master2.ci.ae.sda.corp.telstra.com/rest/api/latest/queue/", 
+        "rel": "self"
+    }, 
+    "queuedBuilds": {
+        "max-result": 1, 
+        "size": 1, 
+        "start-index": 0
+    }
+}

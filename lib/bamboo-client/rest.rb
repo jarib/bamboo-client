@@ -54,7 +54,7 @@ module Bamboo
       end
 
       def queue
-        get("queue/").auto_expand Queue, @http
+        Queue.new get("queue/").data, @http
       end
 
       private

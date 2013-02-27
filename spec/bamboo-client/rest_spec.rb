@@ -49,12 +49,12 @@ module Bamboo
       end
 
       it "should be able to fetch the queue" do
-        document.should_receive(:auto_expand).with(Rest::Queue, http).and_return %w[foo bar]
+        document.should_receive(:data).and_return('some' => 'data')
 
         http.should_receive(:get).with("/rest/api/latest/queue/", nil, nil).
                                   and_return(document)
 
-        client.queue.should == %w[foo bar]
+        client.queue().should be_kind_of(Rest::Queue)
       end
 
       it "should be able to fetch results for a specific key" do

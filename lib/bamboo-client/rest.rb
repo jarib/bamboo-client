@@ -97,6 +97,11 @@ module Bamboo
           doc = @http.get File.join(SERVICE, "result/#{URI.escape key}"), {}, @http.cookies
           doc.auto_expand Result, @http
         end
+
+		def building?
+		  @data['isBuilding']
+		end
+
       end # Plan
 
       class Project

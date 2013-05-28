@@ -98,9 +98,9 @@ module Bamboo
           doc.auto_expand Result, @http
         end
 
-		def building?
-		  @data['isBuilding']
-		end
+        def building?
+          @data['isBuilding']
+        end
 
       end # Plan
 

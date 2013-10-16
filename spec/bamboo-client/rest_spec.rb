@@ -3,8 +3,8 @@ require File.expand_path("../../spec_helper", __FILE__)
 module Bamboo
   module Client
     describe Rest do
-      let(:http) { mock(Http::Json) }
-      let(:document) { mock(Http::Json::Doc) }
+      let(:http) { double(Http::Json) }
+      let(:document) { double(Http::Json::Doc) }
       let(:client) { Rest.new(http) }
 
       it "logs in" do

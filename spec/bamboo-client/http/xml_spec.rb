@@ -20,8 +20,8 @@ module Bamboo
 
       describe Xml::Doc do
         let(:wrapped) {
-          m = mock("nokogiri document")
-          m.stub!(:css).with("errors error").and_return []
+          m = double("nokogiri document")
+          m.stub(:css).with("errors error").and_return []
           m
         }
         let(:doc) { Xml::Doc.new(wrapped)}
@@ -29,13 +29,13 @@ module Bamboo
         it "returns the text of the given CSS selector" do
           wrapped.should_receive(:css).
                   with("some selector").
-                  and_return(mock("node", :text => "bar"))
+                  and_return(double("node", :text => "bar"))
 
           doc.text_for("some selector").should == "bar"
         end
 
         it "checks for errors in the given document" do
-          wrapped.should_receive(:css).with("errors error").and_return [mock(:text => "error!")]
+          wrapped.should_receive(:css).with("errors error").and_return [double(:text => "error!")]
           lambda { doc.text_for "some selector" }.should raise_error(Bamboo::Client::Error)
         end
 

@@ -4,10 +4,10 @@ module Bamboo
   module Client
     describe Remote do
       let(:url)  { "http://bamboo.example.com" }
-      let(:http) { mock(Http::Xml) }
+      let(:http) { double(Http::Xml) }
       let(:client) { Remote.new(http) }
       let(:document) {
-        m = mock(Http::Xml::Doc)
+        m = double(Http::Xml::Doc)
         m.stub(:css).with("errors error").and_return []
 
         m
@@ -136,7 +136,7 @@ module Bamboo
       end # API calls
 
       describe Remote::Build do
-        let(:client) { mock(Remote) }
+        let(:client) { double(Remote) }
         let(:doc)    { xml_fixture("build").css("build").first }
         let(:build) { Remote::Build.new(doc, client) }
 
@@ -214,12 +214,12 @@ module Bamboo
         end
 
         it "returns nil if start time can not be parsed" do
-          doc.stub(:css).and_return mock(:text => "Sun Sep 32")
+          doc.stub(:css).and_return double(:text => "Sun Sep 32")
           result.start_time.should be_nil
         end
 
         it "returns nil if start time can not be parsed" do
-          doc.stub(:css).and_return mock(:text => "Sun Sep 32")
+          doc.stub(:css).and_return double(:text => "Sun Sep 32")
           result.end_time.should be_nil
         end
 

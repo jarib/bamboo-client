@@ -46,6 +46,11 @@ module Bamboo
           Doc.from(resp) unless resp.empty?
         end
 
+        def post_with_query(uri_or_path, query = {}, cookies = nil)
+          resp = RestClient.post(uri_for(uri_or_path, query), '{}', :accept => :json, :content_type => :json, :cookies => cookies)
+          Doc.from(resp) unless resp.empty?
+        end
+
         def get(uri_or_path, params = nil, cookies = nil)
           uri = uri_for(uri_or_path, params)
           Doc.from RestClient.get(uri, :accept => :json, :cookies => cookies)

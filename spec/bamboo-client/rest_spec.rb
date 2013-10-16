@@ -117,7 +117,7 @@ module Bamboo
 
         it "can be queued with parameters" do
           http.should_receive(:cookies).and_return("some" => "cookie")
-          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN", {:customRevision => 'test123'}, {"some" => "cookie"})
+          http.should_receive(:post_with_query).with("/rest/api/latest/queue/S2RB-REMWIN", {:customRevision => 'test123'}, {"some" => "cookie"})
           plan.queue(:customRevision => 'test123')
         end
 

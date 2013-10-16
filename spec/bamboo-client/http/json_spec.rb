@@ -24,6 +24,14 @@ module Bamboo
           json.post("/", :some => "data").should be_nil
         end
 
+        it 'does a POST with query instead of JSON data' do
+          RestClient.should_receive(:post).with(
+            "#{url}/?some=data", '{}', :accept => :json, :content_type => :json, :cookies => nil
+            ).and_return('')
+
+          json.post_with_query("/", :some => "data").should be_nil
+        end
+
         it "returns cookies from GET" do
           net_http_resp = Net::HTTPResponse.new(1.0, 200, "OK")
           net_http_resp.add_field 'Set-Cookie', 'Cookie=Value;'

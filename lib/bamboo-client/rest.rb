@@ -89,8 +89,8 @@ module Bamboo
           @data.fetch("link")['href']
         end
 
-        def queue
-          @http.post File.join(SERVICE, "queue/#{URI.escape key}"), {}, @http.cookies
+        def queue(params = {})
+          @http.post File.join(SERVICE, "queue/#{URI.escape key}"), params, @http.cookies
         end
 
         def results

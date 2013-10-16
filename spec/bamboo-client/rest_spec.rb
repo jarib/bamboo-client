@@ -115,6 +115,12 @@ module Bamboo
           plan.queue
         end
 
+        it "can be queued with parameters" do
+          http.should_receive(:cookies).and_return("some" => "cookie")
+          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN", {:customRevision => 'test123'}, {"some" => "cookie"})
+          plan.queue(:customRevision => 'test123')
+        end
+
         it 'can fetch results' do
           document.should_receive(:auto_expand).with(Rest::Result, http)
           http.should_receive(:cookies).and_return("some" => "cookie")

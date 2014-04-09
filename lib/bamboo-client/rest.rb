@@ -99,8 +99,8 @@ module Bamboo
           end
         end
 
-        def results
-          doc = @http.get File.join(SERVICE, "result/#{URI.escape key}"), {}, @http.cookies
+        def results(params = {})
+          doc = @http.get File.join(SERVICE, "result/#{URI.escape key}"), params, @http.cookies
           doc.auto_expand Result, @http
         end
 
@@ -222,7 +222,7 @@ module Bamboo
         end
 
         def fetch_details(expand)
-          @http.get(uri, :expand => expand)
+          @http.get(uri, {:expand => expand }, @http.cookies)
         end
       end # Result
 
@@ -254,6 +254,10 @@ module Bamboo
 
         def comment
           @data['comment']
+        end
+
+        def commit_url
+          @data['commitUrl']
         end
 
         def files

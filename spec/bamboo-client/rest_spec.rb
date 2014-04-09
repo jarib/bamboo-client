@@ -195,6 +195,7 @@ module Bamboo
         context "with details" do
           before do
             # TODO: arg/uri expectation?
+            http.stub(:cookies => {"some" => "cookie"})
             http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("result_with_changes"))
           end
 
@@ -258,6 +259,9 @@ module Bamboo
           change.comment.should == "Fixed the config thing."
         end
 
+        it "has a commit url" do
+          change.commit_url.should == "https://crucible/changelog/SVN?cs=1101"
+        end
         it "has a list of files" do
           change.files.first.should == {:name => "/trunk/server/src/main/resources/some-config.ini", :revision => "131"}
         end

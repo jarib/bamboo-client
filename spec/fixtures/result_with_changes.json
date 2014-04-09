@@ -54,6 +54,7 @@
         "expand": "files",
         "comment": "Fixed the config thing.",
         "date": "2011-01-20T10:04:47.000+01:00",
+        "commitUrl": "https://crucible/changelog/SVN?cs=1101",
         "files": {
           "size": 1,
           "max-result": 1,

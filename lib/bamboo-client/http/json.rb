@@ -53,6 +53,7 @@ module Bamboo
 
         def get(uri_or_path, params = nil, cookies = nil)
           uri = uri_for(uri_or_path, params)
+          puts "Json.get: url: #{uri} cookies: #{cookies}" if $DEBUG
           Doc.from RestClient.get(uri, :accept => :json, :cookies => cookies)
         end
 

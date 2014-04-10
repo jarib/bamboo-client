@@ -110,21 +110,18 @@ module Bamboo
         end
 
         it "can be queued" do
-          http.should_receive(:cookies).and_return("some" => "cookie")
-          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN", {}, {"some" => "cookie"})
+          http.should_receive(:post).with("/rest/api/latest/queue/S2RB-REMWIN", {})
           plan.queue
         end
 
         it "can be queued with parameters" do
-          http.should_receive(:cookies).and_return("some" => "cookie")
-          http.should_receive(:post_with_query).with("/rest/api/latest/queue/S2RB-REMWIN", {:customRevision => 'test123'}, {"some" => "cookie"})
+          http.should_receive(:post_with_query).with("/rest/api/latest/queue/S2RB-REMWIN", {:customRevision => 'test123'})
           plan.queue(:customRevision => 'test123')
         end
 
         it 'can fetch results' do
           document.should_receive(:auto_expand).with(Rest::Result, http)
-          http.should_receive(:cookies).and_return("some" => "cookie")
-          http.should_receive(:get).with("/rest/api/latest/result/S2RB-REMWIN", {}, {"some" => "cookie"}).and_return(document)
+          http.should_receive(:get).with("/rest/api/latest/result/S2RB-REMWIN", {}).and_return(document)
 
           plan.results
         end
@@ -148,8 +145,7 @@ module Bamboo
 
         it 'can fetch plans' do
           document.should_receive(:data).and_return('plans' => {'plan' => []})
-          http.should_receive(:cookies).and_return("some" => "cookie")
-          http.should_receive(:get).with(URI.parse(project.url), {:expand => 'plans'}, {"some" => "cookie"}).and_return(document)
+          http.should_receive(:get).with(URI.parse(project.url), {:expand => 'plans'}).and_return(document)
 
           project.plans.should == []
         end
@@ -277,19 +273,16 @@ module Bamboo
 
         it "has a list of queued builds when there are queued builds" do
           http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("queue_with_queued_builds"))
-          http.should_receive(:cookies).and_return("some" => "cookie")
           queue.queued_builds.first.should be_kind_of(Rest::QueuedBuild)
         end
 
         it "has an empty list when there are no queued builds" do
           http.should_receive(:get).and_return Http::Json::Doc.new(json_fixture("queue_with_no_queued_builds"))
-          http.should_receive(:cookies).and_return("some" => "cookie")
           queue.queued_builds.should be_empty
         end
 
         it "can add plan to queue" do
-          http.should_receive(:cookies).and_return("some" => "cookie")
-          http.should_receive(:post).with("/rest/api/latest/queue/DEMOPROJECT-CANARY", {}, {"some" => "cookie"}).and_return Http::Json::Doc.new(json_fixture("queued_build"))
+          http.should_receive(:post).with("/rest/api/latest/queue/DEMOPROJECT-CANARY", {}).and_return Http::Json::Doc.new(json_fixture("queued_build"))
           queue.add("DEMOPROJECT-CANARY").should be_kind_of(Rest::QueuedBuild)
         end
       end

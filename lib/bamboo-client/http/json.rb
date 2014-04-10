@@ -41,26 +41,35 @@ module Bamboo
 
         attr_reader :cookies
 
-        def post(uri_or_path, data = {}, cookies = nil)
-          resp = RestClient.post(uri_for(uri_or_path), data.to_json, :accept => :json, :content_type => :json, :cookies => cookies)
+        def post(uri_or_path, data = {})
+          resp = RestClient.post(uri_for(uri_or_path), data.to_json, default_headers.merge(:content_type => :json))
           Doc.from(resp) unless resp.empty?
         end
 
-        def post_with_query(uri_or_path, query = {}, cookies = nil)
-          resp = RestClient.post(uri_for(uri_or_path, query), '{}', :accept => :json, :content_type => :json, :cookies => cookies)
+        def post_with_query(uri_or_path, query = {})
+          resp = RestClient.post(uri_for(uri_or_path, query), '{}', default_headers.merge(:content_type => :json))
           Doc.from(resp) unless resp.empty?
         end
 
-        def get(uri_or_path, params = nil, cookies = nil)
+        def get(uri_or_path, params = nil)
           uri = uri_for(uri_or_path, params)
           puts "Json.get: url: #{uri} cookies: #{cookies}" if $DEBUG
-          Doc.from RestClient.get(uri, :accept => :json, :cookies => cookies)
+          Doc.from RestClient.get(uri, default_headers)
         end
 
         def get_cookies(uri_or_path, params = nil)
           uri = uri_for(uri_or_path, nil)
           resp = RestClient.get(uri, :params => params)
           @cookies = resp.cookies
+        end
+
+        private
+
+        def default_headers
+          params = { :accept => :json }
+          params[:cookies] = @cookies if @cookies
+
+          params
         end
 
       end # Json

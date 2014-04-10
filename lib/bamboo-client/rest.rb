@@ -93,14 +93,14 @@ module Bamboo
           path = File.join(SERVICE, "queue/#{URI.escape key}")
 
           if params
-            @http.post_with_query path, params, @http.cookies
+            @http.post_with_query path, params
           else
-            @http.post path, {}, @http.cookies
+            @http.post path, {}
           end
         end
 
         def results(params = {})
-          doc = @http.get File.join(SERVICE, "result/#{URI.escape key}"), params, @http.cookies
+          doc = @http.get File.join(SERVICE, "result/#{URI.escape key}"), params
           doc.auto_expand Result, @http
         end
 
@@ -131,7 +131,7 @@ module Bamboo
         def plans
           @plans ||= (
             unless @data['plans'] && @data['plans']['plan']
-              @data = @http.get(URI.parse(url), {:expand => 'plans'}, @http.cookies).data
+              @data = @http.get(URI.parse(url), :expand => 'plans').data
             end
 
             @data.fetch('plans').fetch('plan').map { |e| Plan.new(e, @http) }
@@ -222,7 +222,7 @@ module Bamboo
         end
 
         def fetch_details(expand)
-          @http.get(uri, {:expand => expand }, @http.cookies)
+          @http.get(uri, :expand => expand)
         end
       end # Result
 
@@ -284,14 +284,14 @@ module Bamboo
         end
 
         def add(key)
-          data = @http.post(File.join(SERVICE, "queue/#{URI.escape key}"), {}, @http.cookies).data
+          data = @http.post(File.join(SERVICE, "queue/#{URI.escape key}"), {}).data
           QueuedBuild.new(data, @http)
         end
 
         def queued_builds
           @queued_builds ||= (
             unless @data['queuedBuilds'] && @data['queuedBuilds']['queuedBuild']
-              @data = @http.get(File.join(SERVICE, 'queue'), {:expand => 'queuedBuilds'}, @http.cookies).data
+              @data = @http.get(File.join(SERVICE, 'queue'), {:expand => 'queuedBuilds'}).data
             end
 
             begin
@@ -336,7 +336,7 @@ module Bamboo
         def changes
           @changes ||= (
             unless @data['changes'] && @data['changes']['change']
-              @data = @http.get(URI.parse(url), {:expand => 'changes'}, @http.cookies).data
+              @data = @http.get(URI.parse(url), {:expand => 'changes'}).data
             end
 
             @data.fetch('changes').fetch('change').map { |e| Change.new(e, @http) }

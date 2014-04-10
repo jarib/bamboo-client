@@ -23,7 +23,6 @@ module Bamboo
 
         http.should_receive(:get).with(
           "/rest/api/latest/plan/",
-          nil,
           nil
         ).and_return(document)
 
@@ -33,7 +32,7 @@ module Bamboo
       it "should be able to fetch projects" do
         document.should_receive(:auto_expand).with(Rest::Project, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/project/", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/project/", nil).
                                   and_return(document)
 
         client.projects.should == %w[foo bar]
@@ -42,7 +41,7 @@ module Bamboo
       it "should be able to fetch results" do
         document.should_receive(:auto_expand).with(Rest::Result, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/result/", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/result/", nil).
                                   and_return(document)
 
         client.results.should == %w[foo bar]
@@ -51,7 +50,7 @@ module Bamboo
       it "should be able to fetch the queue" do
         document.should_receive(:data).and_return('some' => 'data')
 
-        http.should_receive(:get).with("/rest/api/latest/queue/", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/queue/", nil).
                                   and_return(document)
 
         client.queue().should be_kind_of(Rest::Queue)
@@ -60,7 +59,7 @@ module Bamboo
       it "should be able to fetch results for a specific key" do
         document.should_receive(:auto_expand).with(Rest::Result, http).and_return %w[foo bar]
 
-        http.should_receive(:get).with("/rest/api/latest/result/SOME-KEY", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/result/SOME-KEY", nil).
                                   and_return(document)
 
         client.results_for("SOME-KEY").should == %w[foo bar]
@@ -69,7 +68,7 @@ module Bamboo
       it "should be able to fetch a plan for a specific key" do
         document.should_receive(:data).and_return('some' => 'data')
 
-        http.should_receive(:get).with("/rest/api/latest/plan/SOME-KEY", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/plan/SOME-KEY", nil).
                                   and_return(document)
 
         client.plan_for("SOME-KEY").should be_kind_of(Rest::Plan)
@@ -79,7 +78,7 @@ module Bamboo
       it "should be able to fetch a project for a specific key" do
         document.should_receive(:data).and_return('some' => 'data')
 
-        http.should_receive(:get).with("/rest/api/latest/project/SOME-KEY", nil, nil).
+        http.should_receive(:get).with("/rest/api/latest/project/SOME-KEY", nil).
                                   and_return(document)
 
         client.project_for("SOME-KEY").should be_kind_of(Rest::Project)

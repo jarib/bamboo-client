@@ -60,7 +60,7 @@ module Bamboo
       private
 
       def get(what, params = nil)
-        @http.get File.join(SERVICE, what), params, @cookies
+        @http.get File.join(SERVICE, what), params
       end
 
       class Plan

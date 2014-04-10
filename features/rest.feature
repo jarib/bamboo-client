@@ -5,6 +5,7 @@ Feature: Bamboo REST client
 
   Background:
     Given I am using the REST client
+    And I log in
 
   Scenario: Fetch plans
     When I fetch all the plans
@@ -27,7 +28,6 @@ Feature: Bamboo REST client
     And all results should have a state
 
   Scenario: Authenticated API
-    When I log in
     Then I should get a session ID
     When I fetch all results
     Then all results should have a state

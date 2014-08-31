@@ -5,7 +5,7 @@ Ruby clients for Bamboo's REST APIs:
 * http://confluence.atlassian.com/display/BAMBOO/Bamboo+REST+APIs
 * http://confluence.atlassian.com/display/BAMBOO/Bamboo+Remote+API (deprecated)
 
-## example
+## Example
 
 ```ruby
 client = Bamboo::Client.for(:rest, "http://bamboo.example.com/")

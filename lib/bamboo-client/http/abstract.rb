@@ -17,9 +17,10 @@ module Bamboo
             u.host   = @uri.host
             u.port   = @uri.port
             u.scheme = @uri.scheme
+            u.path   = File.join(uri.path, @uri.path)
           else
             u = uri.dup
-            u.path = uri_or_path
+            u.path = File.join(uri.path, uri_or_path)
           end
 
           u.query = query_string_for(params) if params

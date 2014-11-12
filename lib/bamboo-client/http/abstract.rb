@@ -10,6 +10,8 @@ module Bamboo
 
         private
 
+        # argument is only an uri if its coming from a result set.
+        # in this case, we don't need to prefix the path anymore.
         def uri_for(uri_or_path, params = nil)
           if uri_or_path.kind_of? URI
             u = uri_or_path.dup
@@ -17,7 +19,6 @@ module Bamboo
             u.host   = @uri.host
             u.port   = @uri.port
             u.scheme = @uri.scheme
-            u.path   = File.join(uri.path, @uri.path)
           else
             u = uri.dup
             u.path = File.join(uri.path, uri_or_path)
